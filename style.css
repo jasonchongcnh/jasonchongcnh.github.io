@@ -28,11 +28,13 @@ header p {
 }
 
 header .w3-tag {
-    background-color: rgba(255, 255, 255, 0.2) !important;
+    background-color: rgba(255, 255, 255, 0.25) !important;
     color: white !important;
     padding: 8px 16px;
     border-radius: 20px;
     backdrop-filter: blur(10px);
+    /* Fallback for browsers without backdrop-filter support */
+    background-color: rgba(255, 255, 255, 0.3) !important;
 }
 
 /* Enhanced cards with modern shadows and animations */
@@ -74,7 +76,6 @@ header .w3-tag {
     border-radius: 25px !important;
     transition: all 0.3s ease;
     font-weight: 600;
-    text-transform: uppercase;
     letter-spacing: 1px;
 }
 
@@ -149,10 +150,11 @@ footer .w3-button.w3-black {
 }
 
 footer .w3-button.w3-light-grey {
-    background-color: rgba(255, 255, 255, 0.15) !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
     color: white !important;
     border-radius: 25px;
     backdrop-filter: blur(10px);
+    /* Fallback for browsers without backdrop-filter support */
 }
 
 footer .w3-button.w3-light-grey:not(.w3-disabled):hover {
