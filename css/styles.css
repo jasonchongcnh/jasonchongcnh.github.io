@@ -1,0 +1,49 @@
+/* Modern site styles for CNH Blog */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root{
+  --accent: #0ea5a4;
+  --accent-dark: #075985;
+  --muted: #6b7280;
+  --bg: #f6f8fb;
+  --card: #ffffff;
+}
+
+html,body{height:100%;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:#0f172a;
+  font-family: 'Poppins', Arial, sans-serif;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+.site-container{max-width:1100px;margin:24px auto;padding:0 18px;}
+
+.site-header{background:linear-gradient(90deg,var(--accent-dark),var(--accent));color:#fff;padding:40px 24px;border-radius:10px;margin-bottom:18px;box-shadow:0 8px 30px rgba(2,6,23,0.08)}
+.site-header h1{margin:0;font-size:2rem;letter-spacing:0.2px}
+.site-header p{margin-top:6px;opacity:0.95}
+.site-tag{background:rgba(255,255,255,0.12);padding:6px 10px;border-radius:999px;font-weight:600}
+
+.w3-card-4{border-radius:10px;overflow:hidden;border:0;background:var(--card);box-shadow:0 10px 30px rgba(2,6,23,0.06)}
+.w3-margin{margin-bottom:18px!important}
+
+.card .card-body{padding:18px}
+
+.btn, .w3-button a{display:inline-block;text-decoration:none}
+.btn{background:var(--accent);color:#fff;padding:10px 14px;border-radius:8px;font-weight:600}
+.btn.secondary{background:#111827}
+
+.footer{padding:28px 0;text-align:center;color:var(--muted);font-size:0.95rem}
+.footer a{color:var(--accent-dark);text-decoration:none}
+
+/* Responsive tweaks */
+@media (max-width:600px){
+  .site-header{padding:28px 14px}
+  .site-header h1{font-size:1.4rem}
+  .site-container{margin:12px auto;padding:0 12px}
+}
+
+/* Small helpers to make anchors inside w3 buttons inherit color */
+.w3-button a{color:inherit}
