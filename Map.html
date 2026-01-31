@@ -45,6 +45,28 @@
             filter: saturate(1.1) contrast(1.05);
         }
 
+        .map-overlay {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(34, 211, 238, 0.18), transparent 40%),
+                radial-gradient(circle at 80% 10%, rgba(99, 102, 241, 0.2), transparent 35%),
+                linear-gradient(180deg, rgba(2, 6, 23, 0.2), rgba(2, 6, 23, 0.5));
+            mix-blend-mode: screen;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .map-overlay::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+            background-size: 48px 48px;
+            opacity: 0.2;
+        }
+
         .glass-panel {
             position: absolute;
             top: 20px;
@@ -57,6 +79,19 @@
             backdrop-filter: blur(16px);
             box-shadow: var(--shadow);
             z-index: 1000;
+        }
+
+        .glass-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.5), rgba(99, 102, 241, 0.35));
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
         }
 
         .panel-title {
@@ -85,6 +120,30 @@
             color: var(--accent);
             font-size: 12px;
             font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--accent-strong);
+            box-shadow: 0 0 12px rgba(34, 211, 238, 0.9);
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.9);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.9);
+                opacity: 0.6;
+            }
         }
 
         .status-pill span {
@@ -237,6 +296,16 @@
             box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
         }
 
+        .legend-dot.school {
+            background: #60a5fa;
+            box-shadow: 0 0 10px rgba(96, 165, 250, 0.7);
+        }
+
+        .legend-dot.museum {
+            background: #fbbf24;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.7);
+        }
+
         @media (max-width: 720px) {
             .glass-panel {
                 top: 12px;
@@ -262,10 +331,11 @@
 </head>
 <body>
 <div id="container"></div>
+<div class="map-overlay"></div>
 <div class="glass-panel">
     <div class="panel-title">
         <span>澳門全息地圖</span>
-        <span class="status-pill">定位 <span id="status">準備中</span></span>
+        <span class="status-pill"><span class="status-dot"></span>定位 <span id="status">準備中</span></span>
     </div>
     <p class="panel-subtitle">基於高斯濺射與北斗衛星導航系統的新型全息地圖</p>
     <div class="info">
@@ -276,11 +346,11 @@
 </div>
 <div class="map-legend">
     <div class="legend-item">
-        <span class="legend-dot"></span>
+        <span class="legend-dot school"></span>
         <span>學校地標</span>
     </div>
     <div class="legend-item">
-        <span class="legend-dot" style="background:#244ffb; box-shadow:0 0 10px rgba(251,191,36,0.6);"></span>
+        <span class="legend-dot museum"></span>
         <span>博物館地標</span>
     </div>
 </div>
@@ -290,8 +360,27 @@
     var map = new AMap.Map("container", {
         resizeEnable: true,
         center: [113.541765, 22.186945], // Set the map center to these coordinates
-        zoom: 16 // Set the zoom level
+        zoom: 16, // Set the zoom level
+        mapStyle: 'amap://styles/darkblue'
     });
+
+    function createPin(color) {
+        var svg = "<svg xmlns='http://www.w3.org/2000/svg' width='36' height='48' viewBox='0 0 36 48'>" +
+            "<defs><filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>" +
+            "<feGaussianBlur stdDeviation='2.5' result='coloredBlur'/>" +
+            "<feMerge><feMergeNode in='coloredBlur'/><feMergeNode in='SourceGraphic'/></feMerge>" +
+            "</filter></defs>" +
+            "<path d='M18 1.5C10.6 1.5 4.5 7.6 4.5 15c0 10.5 13.5 31.5 13.5 31.5S31.5 25.5 31.5 15C31.5 7.6 25.4 1.5 18 1.5z' fill='" + color + "' filter='url(#glow)'/>" +
+            "<circle cx='18' cy='15' r='5.5' fill='#0b1020'/></svg>";
+        return new AMap.Icon({
+            size: new AMap.Size(36, 48),
+            image: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg),
+            imageSize: new AMap.Size(36, 48)
+        });
+    }
+
+    var schoolIcon = createPin('#60a5fa');
+    var museumIcon = createPin('#fbbf24');
 
     // Add geolocation functionality
     AMap.plugin('AMap.Geolocation', function() {
@@ -339,7 +428,9 @@
     function addMarker() {
         var marker = new AMap.Marker({
             map: map,
-            position: [113.541765, 22.186945] // Marker position
+            position: [113.541765, 22.186945], // Marker position
+            icon: schoolIcon,
+            offset: new AMap.Pixel(-18, -42)
         });
         AMap.event.addListener(marker, 'click', function() {
             infoWindow.open(map, marker.getPosition());
@@ -350,7 +441,9 @@
     function addSecondMarker() {
         var secondMarker = new AMap.Marker({
             map: map,
-            position: [113.562085, 22.18336] // Set the position of the second marker
+            position: [113.562085, 22.18336], // Set the position of the second marker
+            icon: museumIcon,
+            offset: new AMap.Pixel(-18, -42)
         });
         AMap.event.addListener(secondMarker, 'click', function() {
             secondInfoWindow.open(map, secondMarker.getPosition());
