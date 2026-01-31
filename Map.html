@@ -6,61 +6,177 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <title>基於高斯濺射與北斗衛星導航系統的新型全息地圖</title>
     <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #0b1020;
+            --panel: rgba(15, 23, 42, 0.72);
+            --panel-border: rgba(148, 163, 184, 0.25);
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-strong: #22d3ee;
+            --shadow: 0 10px 30px rgba(15, 23, 42, 0.35);
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         html, body, #container {
             height: 100%;
             width: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: var(--text);
+            background: var(--bg);
+        }
+
+        body {
+            position: relative;
+            overflow: hidden;
+        }
+
+        #container {
+            filter: saturate(1.1) contrast(1.05);
+        }
+
+        .glass-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: min(420px, 90vw);
+            padding: 18px 18px 14px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            backdrop-filter: blur(16px);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0 0 8px 0;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+
+        .panel-subtitle {
+            margin: 0 0 12px 0;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pill span {
+            margin: 0;
+        }
+
+        .info {
+            width: 100%;
+        }
+
+        .info h4 {
+            margin: 0 0 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .info p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .divider {
+            height: 1px;
+            margin: 12px 0;
+            background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.4), transparent);
+            border: none;
         }
 
         .content-window-card {
             position: relative;
-            box-shadow: none;
+            box-shadow: 0 12px 30px rgba(2, 8, 23, 0.25);
             bottom: 0;
             left: 0;
-            width: 450px;
-            height: 100px;
+            width: 340px;
+            height: auto;
             padding: 0;
-        }
-
-        .content-window-card p {
-            height: 2rem;
+            border-radius: 14px;
+            overflow: hidden;
         }
 
         .custom-info {
-            border: solid 1px silver;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 14px;
+            background: #0f172a;
+            color: #e2e8f0;
         }
 
         div.info-top {
             position: relative;
-            background: none repeat scroll 0 0 #F9F9F9;
-            border-bottom: 1px solid #CCC;
-            border-radius: 5px 5px 0 0;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(34, 211, 238, 0.2));
+            border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 14px 14px 0 0;
         }
 
         div.info-top div {
             display: inline-block;
-            color: #333333;
+            color: #e2e8f0;
             font-size: 14px;
-            font-weight: bold;
-            line-height: 31px;
-            padding: 0 10px;
+            font-weight: 600;
+            line-height: 36px;
+            padding: 0 14px;
         }
 
         div.info-top img {
             position: absolute;
-            top: 10px;
+            top: 9px;
             right: 10px;
             transition-duration: 0.25s;
+            filter: brightness(1.2);
         }
 
         div.info-top img:hover {
-            box-shadow: 0px 0px 5px #000;
+            box-shadow: 0px 0px 8px rgba(56, 189, 248, 0.6);
         }
 
         div.info-middle {
-            font-size: 12px;
-            padding: 10px 6px;
-            line-height: 20px;
+            font-size: 12.5px;
+            padding: 12px 12px 14px;
+            line-height: 1.6;
+            background-color: #0f172a;
+        }
+
+        div.info-middle a {
+            color: var(--accent-strong);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        div.info-middle a:hover {
+            text-decoration: underline;
         }
 
         div.info-bottom {
@@ -76,25 +192,97 @@
         }
 
         span {
-            margin-left: 5px;
+            margin-left: 6px;
             font-size: 11px;
         }
 
         .info-middle img {
             float: left;
-            margin-right: 6px;
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            margin-right: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.3);
         }
 
-        .info {
-            width: 26rem;
+        .map-legend {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            color: var(--text);
+            font-size: 12px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--accent);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+        }
+
+        @media (max-width: 720px) {
+            .glass-panel {
+                top: 12px;
+                left: 12px;
+                right: 12px;
+                width: auto;
+            }
+
+            .map-legend {
+                top: auto;
+                bottom: 16px;
+                right: 12px;
+                left: 12px;
+                flex-direction: row;
+                justify-content: space-around;
+            }
+
+            .content-window-card {
+                width: 300px;
+            }
         }
     </style>
 </head>
 <body>
 <div id="container"></div>
-<div class="info">
-    <h4 id="status"></h4><hr>
-    <p id="result"></p><hr>
+<div class="glass-panel">
+    <div class="panel-title">
+        <span>澳門全息地圖</span>
+        <span class="status-pill">定位 <span id="status">準備中</span></span>
+    </div>
+    <p class="panel-subtitle">基於高斯濺射與北斗衛星導航系統的新型全息地圖</p>
+    <div class="info">
+        <h4>定位資訊</h4>
+        <hr class="divider">
+        <p id="result">正在獲取定位資訊，請稍候。</p>
+    </div>
+</div>
+<div class="map-legend">
+    <div class="legend-item">
+        <span class="legend-dot"></span>
+        <span>學校地標</span>
+    </div>
+    <div class="legend-item">
+        <span class="legend-dot" style="background:#fbbf24; box-shadow:0 0 10px rgba(251,191,36,0.6);"></span>
+        <span>博物館地標</span>
+    </div>
 </div>
 <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=e1f470c32fc2df3f783099676f76ff49"></script>
 <script type="text/javascript">
@@ -212,7 +400,7 @@
 
         var middle = document.createElement("div");
         middle.className = "info-middle";
-        middle.style.backgroundColor = 'white';
+        middle.style.backgroundColor = '#0f172a';
         middle.innerHTML = content;
         info.appendChild(middle);
 
