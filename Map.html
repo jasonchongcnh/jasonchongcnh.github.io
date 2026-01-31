@@ -42,7 +42,23 @@
         }
 
         #container {
+            position: absolute;
+            inset: 0;
             filter: saturate(1.1) contrast(1.05);
+        }
+
+        .ambient-glow {
+            position: fixed;
+            inset: -20% -10% -10% -10%;
+            background:
+                radial-gradient(600px 600px at 15% 10%, rgba(56, 189, 248, 0.15), transparent 60%),
+                radial-gradient(500px 500px at 85% 20%, rgba(129, 140, 248, 0.18), transparent 60%),
+                radial-gradient(700px 700px at 50% 90%, rgba(34, 211, 238, 0.12), transparent 65%);
+            mix-blend-mode: screen;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 1;
+            animation: glow-drift 14s ease-in-out infinite;
         }
 
         .glass-panel {
@@ -59,6 +75,20 @@
             z-index: 1000;
         }
 
+        .glass-panel::after {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(120deg, rgba(56, 189, 248, 0.45), rgba(129, 140, 248, 0.2), rgba(34, 211, 238, 0.35));
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
         .panel-title {
             display: flex;
             align-items: center;
@@ -67,6 +97,7 @@
             font-size: 16px;
             font-weight: 600;
             letter-spacing: 0.2px;
+            text-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
         }
 
         .panel-subtitle {
@@ -85,6 +116,15 @@
             color: var(--accent);
             font-size: 12px;
             font-weight: 600;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: var(--accent);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.7);
+            animation: pulse 1.8s ease-in-out infinite;
         }
 
         .status-pill span {
@@ -106,6 +146,47 @@
             font-size: 13px;
             color: var(--muted);
             line-height: 1.6;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .primary-btn,
+        .ghost-btn {
+            appearance: none;
+            border: none;
+            font-size: 12.5px;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .primary-btn {
+            color: #04101c;
+            background: linear-gradient(120deg, #38bdf8, #22d3ee);
+            box-shadow: 0 8px 18px rgba(56, 189, 248, 0.35);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .ghost-btn {
+            color: var(--text);
+            background: rgba(148, 163, 184, 0.12);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+        }
+
+        .primary-btn:hover,
+        .ghost-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(56, 189, 248, 0.28);
         }
 
         .divider {
@@ -223,6 +304,20 @@
             z-index: 1000;
         }
 
+        .map-legend::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(120deg, rgba(56, 189, 248, 0.35), rgba(129, 140, 248, 0.25));
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
         .legend-item {
             display: flex;
             align-items: center;
@@ -235,6 +330,26 @@
             border-radius: 999px;
             background: var(--accent);
             box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+        }
+
+        @keyframes glow-drift {
+            0%, 100% {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+            50% {
+                transform: translate3d(2%, -3%, 0) scale(1.05);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+            50% {
+                transform: scale(1.4);
+                opacity: 0.6;
+            }
         }
 
         @media (max-width: 720px) {
@@ -257,21 +372,30 @@
             .content-window-card {
                 width: 300px;
             }
+
+            .panel-actions {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
+<div class="ambient-glow"></div>
 <div id="container"></div>
 <div class="glass-panel">
     <div class="panel-title">
         <span>澳門全息地圖</span>
-        <span class="status-pill">定位 <span id="status">準備中</span></span>
+        <span class="status-pill"><span class="status-dot"></span>定位 <span id="status">準備中</span></span>
     </div>
     <p class="panel-subtitle">基於高斯濺射與北斗衛星導航系統的新型全息地圖</p>
     <div class="info">
         <h4>定位資訊</h4>
         <hr class="divider">
         <p id="result">正在獲取定位資訊，請稍候。</p>
+    </div>
+    <div class="panel-actions">
+        <a class="primary-btn" href="introduction.html">立即探索</a>
+        <button class="ghost-btn" id="focus-macau">回到澳門</button>
     </div>
 </div>
 <div class="map-legend">
@@ -292,6 +416,13 @@
         center: [113.541765, 22.186945], // Set the map center to these coordinates
         zoom: 16 // Set the zoom level
     });
+
+    var focusButton = document.getElementById('focus-macau');
+    if (focusButton) {
+        focusButton.addEventListener('click', function() {
+            map.setZoomAndCenter(16, [113.541765, 22.186945]);
+        });
+    }
 
     // Add geolocation functionality
     AMap.plugin('AMap.Geolocation', function() {
