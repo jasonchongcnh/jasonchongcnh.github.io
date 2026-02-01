@@ -1,518 +1,631 @@
 <!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <title>基於高斯濺射與北斗衛星導航系統的新型全息地圖</title>
-    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+    <!-- AMap CSS remains for map basics -->
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0b1020;
-            --panel: rgba(15, 23, 42, 0.72);
-            --panel-border: rgba(148, 163, 184, 0.25);
-            --text: #e2e8f0;
-            --muted: #94a3b8;
-            --accent: #38bdf8;
-            --accent-strong: #22d3ee;
-            --shadow: 0 10px 30px rgba(15, 23, 42, 0.35);
-            --radius: 16px;
+            /* Palette - Deep Cyber/Space Theme */
+            --bg-deep: #020617;
+            --panel-bg: rgba(15, 23, 42, 0.65);
+            --panel-border: rgba(148, 163, 184, 0.15);
+            --panel-highlight: rgba(255, 255, 255, 0.05);
+
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+
+            --accent-primary: #38bdf8;
+            /* Cyan/Sky */
+            --accent-glow: rgba(56, 189, 248, 0.4);
+
+            --accent-secondary: #818cf8;
+            /* Indigo */
+
+            --shadow-lg: 0 20px 40px -8px rgba(0, 0, 0, 0.5);
+            --radius-lg: 20px;
+            --radius-md: 12px;
+
+            --anim-speed: 0.3s;
         }
 
         * {
             box-sizing: border-box;
         }
 
-        html, body, #container {
+        html,
+        body,
+        #container {
             height: 100%;
             width: 100%;
             margin: 0;
             padding: 0;
-            font-family: "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-            color: var(--text);
-            background: var(--bg);
-        }
-
-        body {
-            position: relative;
+            font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: var(--text-main);
+            background: var(--bg-deep);
             overflow: hidden;
         }
 
+        /* Map Filter for Dark Mode Vibe */
         #container {
-            filter: saturate(1.1) contrast(1.05);
+            filter: saturate(1.2) contrast(1.1) brightness(0.9);
+            background: var(--bg-deep);
+            /* Fallback */
         }
 
+        /* --- Ambient Overlay --- */
         .map-overlay {
             position: absolute;
             inset: 0;
             background:
-                radial-gradient(circle at 20% 20%, rgba(34, 211, 238, 0.18), transparent 40%),
-                radial-gradient(circle at 80% 10%, rgba(99, 102, 241, 0.2), transparent 35%),
-                linear-gradient(180deg, rgba(2, 6, 23, 0.2), rgba(2, 6, 23, 0.5));
-            mix-blend-mode: screen;
+                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.08), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(129, 140, 248, 0.08), transparent 40%);
             pointer-events: none;
-            z-index: 5;
+            z-index: 10;
         }
 
-        .map-overlay::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-image: linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
-            background-size: 48px 48px;
-            opacity: 0.2;
-        }
-
+        /* --- Glass Panel (Main UI) --- */
         .glass-panel {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            width: min(420px, 90vw);
-            padding: 18px 18px 14px;
-            border-radius: var(--radius);
-            background: var(--panel);
+            top: 24px;
+            left: 24px;
+            width: 380px;
+            max-width: calc(100vw - 48px);
+            padding: 24px;
+            border-radius: var(--radius-lg);
+
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+
             border: 1px solid var(--panel-border);
-            backdrop-filter: blur(16px);
-            box-shadow: var(--shadow);
-            z-index: 1000;
+            box-shadow:
+                0 0 0 1px var(--panel-highlight) inset,
+                var(--shadow-lg);
+
+            z-index: 100;
+            animation: slideInLeft 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+            transform: translateY(-20px);
         }
 
-        .glass-panel::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.5), rgba(99, 102, 241, 0.35));
-            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
         }
 
         .panel-title {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 0 0 8px 0;
-            font-size: 16px;
-            font-weight: 600;
-            letter-spacing: 0.2px;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #fff, #bfdbfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
         }
 
-        .panel-subtitle {
-            margin: 0 0 12px 0;
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        .status-pill {
+        .status-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 10px;
-            border-radius: 999px;
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--accent);
-            font-size: 12px;
+            padding: 4px 10px;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 20px;
+            font-size: 11px;
             font-weight: 600;
+            color: var(--accent-primary);
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 999px;
-            background: var(--accent-strong);
-            box-shadow: 0 0 12px rgba(34, 211, 238, 0.9);
-            animation: pulse 1.8s infinite;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--accent-primary);
+            box-shadow: 0 0 8px var(--accent-primary);
+            animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
             0% {
-                transform: scale(0.9);
-                opacity: 0.6;
+                transform: scale(0.95);
+                opacity: 0.8;
             }
+
             50% {
-                transform: scale(1.2);
-                opacity: 1;
+                transform: scale(1.4);
+                opacity: 0.4;
+                box-shadow: 0 0 12px var(--accent-primary);
             }
+
             100% {
-                transform: scale(0.9);
-                opacity: 0.6;
+                transform: scale(0.95);
+                opacity: 0.8;
             }
         }
 
-        .status-pill span {
-            margin: 0;
-        }
-
-        .info {
-            width: 100%;
-        }
-
-        .info h4 {
-            margin: 0 0 10px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .info p {
-            margin: 0;
+        .panel-subtitle {
             font-size: 13px;
-            color: var(--muted);
-            line-height: 1.6;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin: 0 0 20px 0;
         }
 
-        .divider {
-            height: 1px;
-            margin: 12px 0;
-            background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.4), transparent);
-            border: none;
-        }
-
-        .content-window-card {
-            position: relative;
-            box-shadow: 0 12px 30px rgba(2, 8, 23, 0.25);
-            bottom: 0;
-            left: 0;
-            width: 340px;
-            height: auto;
-            padding: 0;
-            border-radius: 14px;
-            overflow: hidden;
-        }
-
-        .custom-info {
-            border: 1px solid rgba(148, 163, 184, 0.25);
-            border-radius: 14px;
-            background: #0f172a;
-            color: #e2e8f0;
-        }
-
-        div.info-top {
-            position: relative;
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(34, 211, 238, 0.2));
-            border-bottom: 1px solid rgba(148, 163, 184, 0.25);
-            border-radius: 14px 14px 0 0;
-        }
-
-        div.info-top div {
-            display: inline-block;
-            color: #e2e8f0;
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 36px;
-            padding: 0 14px;
-        }
-
-        div.info-top img {
-            position: absolute;
-            top: 9px;
-            right: 10px;
-            transition-duration: 0.25s;
-            filter: brightness(1.2);
-        }
-
-        div.info-top img:hover {
-            box-shadow: 0px 0px 8px rgba(56, 189, 248, 0.6);
-        }
-
-        div.info-middle {
-            font-size: 12.5px;
-            padding: 12px 12px 14px;
-            line-height: 1.6;
-            background-color: #0f172a;
-        }
-
-        div.info-middle a {
-            color: var(--accent-strong);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        div.info-middle a:hover {
-            text-decoration: underline;
-        }
-
-        div.info-bottom {
-            height: 0px;
-            width: 100%;
-            clear: both;
-            text-align: center;
-        }
-
-        div.info-bottom img {
-            position: relative;
-            z-index: 104;
-        }
-
-        span {
-            margin-left: 6px;
-            font-size: 11px;
-        }
-
-        .info-middle img {
-            float: left;
-            width: 64px;
-            height: 64px;
-            object-fit: cover;
-            margin-right: 10px;
-            border-radius: 10px;
-            border: 1px solid rgba(148, 163, 184, 0.3);
-        }
-
-        .map-legend {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding: 12px 14px;
-            border-radius: 12px;
-            background: rgba(15, 23, 42, 0.75);
-            border: 1px solid rgba(148, 163, 184, 0.25);
-            color: var(--text);
+        .info-section h4 {
             font-size: 12px;
-            box-shadow: var(--shadow);
-            z-index: 1000;
-        }
-
-        .legend-item {
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin: 0 0 12px 0;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
+        .info-section h4::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--panel-border), transparent);
+        }
+
+        .location-info {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            background: rgba(2, 6, 23, 0.3);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--panel-border);
+        }
+
+        /* --- Legend --- */
+        .map-legend {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            animation: fadeIn 0.6s 0.2s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: background 0.2s;
+            cursor: default;
+        }
+
+        .legend-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
         .legend-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 999px;
-            background: var(--accent);
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
         }
 
         .legend-dot.school {
             background: #60a5fa;
-            box-shadow: 0 0 10px rgba(96, 165, 250, 0.7);
+            box-shadow: 0 0 8px rgba(96, 165, 250, 0.5);
         }
 
         .legend-dot.museum {
             background: #fbbf24;
-            box-shadow: 0 0 10px rgba(251, 191, 36, 0.7);
+            box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
         }
 
-        @media (max-width: 720px) {
+        /* --- Custom Info Window (Replaces Default) --- */
+        .amap-info-window {
+            overflow: visible !important;
+            /* Allow custom styling to pop out */
+        }
+
+        .custom-info-card {
+            width: 320px;
+            background: #0f172a;
+            /* Solid dark for readability */
+            border-radius: 16px;
+            box-shadow:
+                0 0 0 1px rgba(148, 163, 184, 0.2),
+                0 20px 40px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            position: relative;
+            color: #f1f5f9;
+            font-family: inherit;
+        }
+
+        /* Arrow/Tail */
+        .custom-info-arrow {
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 16px;
+            height: 16px;
+            background: #0f172a;
+            border-right: 1px solid rgba(148, 163, 184, 0.2);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            z-index: 0;
+        }
+
+        .card-header {
+            padding: 16px 20px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            background: linear-gradient(to bottom, rgba(56, 189, 248, 0.05), transparent);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            color: #fff;
+        }
+
+        .card-tag {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            vertical-align: middle;
+            background: rgba(148, 163, 184, 0.2);
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            opacity: 0.6;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            padding: 4px;
+            display: flex;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .close-btn svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            stroke-width: 2.5;
+        }
+
+        .card-content {
+            padding: 16px 20px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+
+        .card-image {
+            width: 100%;
+            height: auto;
+            max-height: 220px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            background: #020617;
+        }
+
+        .info-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .info-row svg {
+            width: 16px;
+            height: 16px;
+            color: var(--accent-primary);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .action-link {
+            display: block;
+            margin-top: 12px;
+            text-align: center;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-primary);
+            text-decoration: none;
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .action-link:hover {
+            background: var(--accent-primary);
+            color: #000;
+        }
+
+        @media (max-width: 600px) {
             .glass-panel {
-                top: 12px;
-                left: 12px;
-                right: 12px;
+                top: auto;
+                bottom: 20px;
+                left: 16px;
+                right: 16px;
                 width: auto;
+                max-width: none;
+                animation: slideInUp 0.6s forwards;
             }
 
             .map-legend {
-                top: auto;
-                bottom: 16px;
-                right: 12px;
-                left: 12px;
-                flex-direction: row;
-                justify-content: space-around;
+                top: 16px;
+                right: 16px;
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
             }
 
-            .content-window-card {
-                width: 300px;
+            to {
+                transform: translateY(0);
+                opacity: 1;
             }
         }
     </style>
 </head>
+
 <body>
-<div id="container"></div>
-<div class="map-overlay"></div>
-<div class="glass-panel">
-    <div class="panel-title">
-        <span>澳門全息地圖</span>
-        <span class="status-pill"><span class="status-dot"></span>定位 <span id="status">準備中</span></span>
-    </div>
-    <p class="panel-subtitle">基於高斯濺射與北斗衛星導航系統的新型全息地圖</p>
-    <div class="info">
-        <h4>定位資訊</h4>
-        <hr class="divider">
-        <p id="result">正在獲取定位資訊，請稍候。</p>
-    </div>
-</div>
-<div class="map-legend">
-    <div class="legend-item">
-        <span class="legend-dot school"></span>
-        <span>學校地標</span>
-    </div>
-    <div class="legend-item">
-        <span class="legend-dot museum"></span>
-        <span>博物館地標</span>
-    </div>
-</div>
-<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=e1f470c32fc2df3f783099676f76ff49"></script>
-<script type="text/javascript">
-    // Initialize the map
-    var map = new AMap.Map("container", {
-        resizeEnable: true,
-        center: [113.541765, 22.186945], // Set the map center to these coordinates
-        zoom: 16, // Set the zoom level
-        mapStyle: 'amap://styles/darkblue'
-    });
 
-    function createPin(color) {
-        var svg = "<svg xmlns='http://www.w3.org/2000/svg' width='36' height='48' viewBox='0 0 36 48'>" +
-            "<defs><filter id='glow' x='-50%' y='-50%' width='200%' height='200%'>" +
-            "<feGaussianBlur stdDeviation='2.5' result='coloredBlur'/>" +
-            "<feMerge><feMergeNode in='coloredBlur'/><feMergeNode in='SourceGraphic'/></feMerge>" +
-            "</filter></defs>" +
-            "<path d='M18 1.5C10.6 1.5 4.5 7.6 4.5 15c0 10.5 13.5 31.5 13.5 31.5S31.5 25.5 31.5 15C31.5 7.6 25.4 1.5 18 1.5z' fill='" + color + "' filter='url(#glow)'/>" +
-            "<circle cx='18' cy='15' r='5.5' fill='#0b1020'/></svg>";
-        return new AMap.Icon({
-            size: new AMap.Size(36, 48),
-            image: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg),
-            imageSize: new AMap.Size(36, 48)
+    <div id="container"></div>
+    <div class="map-overlay"></div>
+
+    <!-- Main Status Panel -->
+    <div class="glass-panel">
+        <div class="panel-header">
+            <h1 class="panel-title">澳門全息地圖</h1>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span id="status">準備中</span>
+            </div>
+        </div>
+        <p class="panel-subtitle">基於高斯濺射與北斗衛星導航系統的<br>新型全息地圖體驗</p>
+
+        <div class="info-section">
+            <h4>定位資訊 / LOCATION</h4>
+            <div class="location-info" id="result">
+                正在嘗試獲取您的高精度位置信息...
+            </div>
+        </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="map-legend">
+        <div class="legend-item">
+            <span class="legend-dot school"></span>
+            <span>學校地標</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot museum"></span>
+            <span>博物館地標</span>
+        </div>
+    </div>
+
+    <script type="text/javascript"
+        src="https://webapi.amap.com/maps?v=1.4.15&key=e1f470c32fc2df3f783099676f76ff49"></script>
+    <script type="text/javascript">
+        // --- 1. Map Initialization ---
+        // Use dark style directly for better performance before tiles load
+        var map = new AMap.Map("container", {
+            resizeEnable: true,
+            center: [113.541765, 22.186945],
+            zoom: 16,
+            mapStyle: 'amap://styles/darkblue', // amap://styles/grey is also good for this theme
+            pitch: 50, // Tilt for 3D feel
+            viewMode: '3D'
         });
-    }
 
-    var schoolIcon = createPin('#60a5fa');
-    var museumIcon = createPin('#fbbf24');
+        // --- 2. Custom Marker Icons (SVG) ---
+        function createPin(color) {
+            // Slightly cleaner SVG pin with drop shadow filter built-in
+            var svg = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="52" viewBox="0 0 40 52">
+            <defs>
+                <filter id="f1" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+                </filter>
+            </defs>
+            <ellipse cx="20" cy="48" rx="12" ry="4" fill="${color}" opacity="0.4" filter="url(#f1)" />
+            <path d="M20 2C11.16 2 4 9.16 4 18c0 11 16 32 16 32s16-21 16-32c0-8.84-7.16-16-16-16z" fill="${color}"/>
+            <circle cx="20" cy="18" r="6" fill="#020617"/>
+        </svg>`;
 
-    // Add geolocation functionality
-    AMap.plugin('AMap.Geolocation', function() {
-        var geolocation = new AMap.Geolocation({
-            enableHighAccuracy: true, // 是否使用高精度定位，默认:true
-            timeout: 10000, // 超过10秒后停止定位，默认：5s
-            buttonPosition: 'RB', // 定位按钮的停靠位置
-            buttonOffset: new AMap.Pixel(10, 20), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-            zoomToAccuracy: true // 定位成功后是否自动调整地图视野到定位点
-        });
-        map.addControl(geolocation);
-        geolocation.getCurrentPosition(function(status, result) {
-            if (status == 'complete') {
-                onComplete(result);
-            } else {
-                onError(result);
-            }
-        });
-    });
+            return new AMap.Icon({
+                size: new AMap.Size(40, 52),
+                image: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg),
+                imageSize: new AMap.Size(40, 52)
+            });
+        }
 
-    // Parse geolocation results
-    function onComplete(data) {
-        document.getElementById('status').innerHTML = '定位成功';
-        var str = [];
-        str.push('定位结果：' + data.position);
-        str.push('定位类别：' + data.location_type);
-        if (data.accuracy) {
-            str.push('精度：' + data.accuracy + ' 米');
-        } // 如为IP精确定位结果则没有精度信息
-        str.push('是否经过偏移：' + (data.isConverted ? '是' : '否'));
-        document.getElementById('result').innerHTML = str.join('<br>');
-    }
+        var schoolIcon = createPin('#60a5fa');
+        var museumIcon = createPin('#fbbf24');
 
-    // Parse geolocation error
-    function onError(data) {
-        document.getElementById('status').innerHTML = '定位失败';
-        document.getElementById('result').innerHTML = '失败原因排查信息:' + data.message;
-    }
 
-    // Add markers to the map
-    addMarker();
-    addSecondMarker();
+        // --- 3. Custom InfoWindow Logic ---
+        // Function to generate the HTML content for InfoWindow
+        function createInfoWindowContent(title, tag, image, address, phone, link) {
+            var content = document.createElement("div");
+            content.className = "custom-info-card";
 
-    // Add the first marker
-    function addMarker() {
-        var marker = new AMap.Marker({
+            // Content HTML
+            var html = `
+            <div class="card-header">
+                <div>
+                    <span class="card-title">${title}</span>
+                    <span class="card-tag" style="border-color:${tag === '學校' ? '#60a5fa' : '#fbbf24'}; color:${tag === '學校' ? '#93c5fd' : '#fcd34d'}">${tag}</span>
+                </div>
+                <button class="close-btn" onclick="closeInfoWindow()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="card-content">
+                ${image ? `<img src="${image}" class="card-image" alt="${title}" onerror="this.style.display='none'">` : ''}
+                
+                <div class="info-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>${address}</span>
+                </div>
+                
+                ${phone ? `
+                <div class="info-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    <span>${phone}</span>
+                </div>` : ''}
+
+                ${link ? `<a href="${link}" target="_blank" class="action-link">More Info &rarr;</a>` : ''}
+            </div>
+            <div class="custom-info-arrow"></div>
+        `;
+            content.innerHTML = html;
+            return content;
+        }
+
+        // Helper to close window
+        window.closeInfoWindow = function () {
+            map.clearInfoWindow();
+        };
+
+        // --- 4. Add Markers & Interactions ---
+
+        // Marker 1: School
+        var marker1 = new AMap.Marker({
             map: map,
-            position: [113.541765, 22.186945], // Marker position
+            position: [113.541765, 22.186945],
             icon: schoolIcon,
-            offset: new AMap.Pixel(-18, -42)
+            offset: new AMap.Pixel(-20, -46)
         });
-        AMap.event.addListener(marker, 'click', function() {
-            infoWindow.open(map, marker.getPosition());
-        });
-    }
 
-    // Add the second marker
-    function addSecondMarker() {
-        var secondMarker = new AMap.Marker({
+        var infoWindow1 = new AMap.InfoWindow({
+            isCustom: true,
+            content: createInfoWindowContent(
+                '澳門慈幼中學',
+                '學校',
+                './Image/IS_School_Macau.png',
+                '澳門風順堂街十六號',
+                '(853) 2857 3033',
+                'http://ism.edu.mo'
+            ),
+            offset: new AMap.Pixel(0, -50)
+        });
+
+        marker1.on('click', function () {
+            infoWindow1.open(map, marker1.getPosition());
+        });
+
+        // Marker 2: Museum
+        var marker2 = new AMap.Marker({
             map: map,
-            position: [113.562085, 22.18336], // Set the position of the second marker
+            position: [113.562085, 22.18336],
             icon: museumIcon,
-            offset: new AMap.Pixel(-18, -42)
+            offset: new AMap.Pixel(-20, -46)
         });
-        AMap.event.addListener(secondMarker, 'click', function() {
-            secondInfoWindow.open(map, secondMarker.getPosition());
+
+        var infoWindow2 = new AMap.InfoWindow({
+            isCustom: true,
+            content: createInfoWindowContent(
+                '澳門科學館',
+                '博物館',
+                './Image/MSC.jpg',
+                '澳門孫逸仙大馬路',
+                '(853) 2888 0822',
+                'https://www.msc.org.mo/zh'
+            ),
+            offset: new AMap.Pixel(0, -50)
         });
-    }
 
-    // Create the first info window
-    var title = '澳門慈幼中學<span style="font-size:11px;color:#F00;">學校</span>',
-        content = [];
-    content.push("<img src='./Image/IS_School_Macau.png'>Address: 澳門風順堂街十六號");
-    content.push("Phone: (853) 2857 3033");
-    content.push("<a href='http://ism.edu.mo'>More Info</a>");
-    var infoWindow = new AMap.InfoWindow({
-        isCustom: true,
-        content: createInfoWindow(title, content.join("<br/>")),
-        offset: new AMap.Pixel(16, -45)
-    });
+        marker2.on('click', function () {
+            infoWindow2.open(map, marker2.getPosition());
+        });
 
-    // Create the second info window
-    var secondTitle = '澳門科學館<span style="font-size:11px;color:#F00;">博物館</span>',
-        secondContent = [];
-    secondContent.push("<img src='./Image/MSC.jpg'>Address: 澳門孫逸仙大馬路");
-    secondContent.push("Phone: (853) 2888 0822");
-    secondContent.push("<a href='https://www.msc.org.mo/zh'>More Info</a>");
-    var secondInfoWindow = new AMap.InfoWindow({
-        isCustom: true,
-        content: createInfoWindow(secondTitle, secondContent.join("<br/>")),
-        offset: new AMap.Pixel(16, -45)
-    });
 
-    // Build the custom info window
-    function createInfoWindow(title, content) {
-        var info = document.createElement("div");
-        info.className = "custom-info input-card content-window-card";
+        // --- 5. Geolocation Logic ---
+        AMap.plugin('AMap.Geolocation', function () {
+            var geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true,
+                timeout: 10000,
+                buttonPosition: 'RB',
+                buttonOffset: new AMap.Pixel(20, 80), // Moved up slightly to not overlap copyright
+                zoomToAccuracy: true
+            });
+            map.addControl(geolocation);
 
-        var top = document.createElement("div");
-        var titleD = document.createElement("div");
-        var closeX = document.createElement("img");
-        top.className = "info-top";
-        titleD.innerHTML = title;
-        closeX.src = "https://webapi.amap.com/images/close2.gif";
-        closeX.onclick = closeInfoWindow;
+            geolocation.getCurrentPosition(function (status, result) {
+                if (status == 'complete') {
+                    onLocateSuccess(result);
+                } else {
+                    onLocateError(result);
+                }
+            });
+        });
 
-        top.appendChild(titleD);
-        top.appendChild(closeX);
-        info.appendChild(top);
+        function onLocateSuccess(data) {
+            document.getElementById('status').innerHTML = '定位成功';
+            document.getElementById('status').style.color = '#38bdf8';
 
-        var middle = document.createElement("div");
-        middle.className = "info-middle";
-        middle.style.backgroundColor = '#0f172a';
-        middle.innerHTML = content;
-        info.appendChild(middle);
+            var str = [];
+            str.push('<span style="color:var(--accent-primary)">coords:</span> ' + data.position);
+            if (data.accuracy) {
+                str.push('<span style="color:var(--accent-primary)">accuracy:</span> ' + data.accuracy + 'm');
+            }
+            document.getElementById('result').innerHTML = str.join('<br>');
+        }
 
-        var bottom = document.createElement("div");
-        bottom.className = "info-bottom";
-        bottom.style.position = 'relative';
-        bottom.style.top = '0px';
-        bottom.style.margin = '0 auto';
-        var sharp = document.createElement("img");
-        sharp.src = "https://webapi.amap.com/images/sharp.png";
-        bottom.appendChild(sharp);
-        info.appendChild(bottom);
-        return info;
-    }
+        function onLocateError(data) {
+            document.getElementById('status').innerHTML = '定位失敗';
+            document.getElementById('status').style.color = '#ef4444'; // Red
+            document.getElementById('result').innerHTML = '無法獲取位置信息: ' + (data.message || '未知錯誤');
+        }
 
-    // Close the info window
-    function closeInfoWindow() {
-        map.clearInfoWindow();
-    }
-</script>
+    </script>
 </body>
+
 </html>
