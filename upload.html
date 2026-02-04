@@ -266,6 +266,104 @@
             color: var(--text-main);
         }
 
+        /* Map Modal */
+        .modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            background: var(--bg-deep);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 16px 24px;
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--panel-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin: 0;
+        }
+
+        .modal-body {
+            flex: 1;
+            position: relative;
+        }
+
+        #pickerMap {
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            background: var(--panel-bg);
+            border-top: 1px solid var(--panel-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--panel-border);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-cancel:hover {
+            color: #fff;
+            border-color: #fff;
+        }
+
+        .btn-confirm {
+            background: var(--accent-primary);
+            color: #000;
+            border: none;
+            padding: 8px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-confirm:hover {
+            background: #7dd3fc;
+        }
+
         /* Success Message Overlay */
         .success-overlay {
             position: absolute;
@@ -373,6 +471,7 @@
                     <span class="coords" id="locCoords">--.------, --.------</span>
                 </div>
                 <button class="get-loc-btn" id="getLocBtn">獲取位置</button>
+                <button class="get-loc-btn" id="openMapBtn" style="margin-left:8px;">選取地圖</button>
             </div>
         </div>
 
@@ -402,6 +501,25 @@
         </div>
     </div>
 
+    <!-- Map Picker Modal -->
+    <div class="modal-overlay" id="mapModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">點擊地圖選擇位置</h3>
+                <button class="btn-cancel" style="border:none; padding:4px;" onclick="closeMapModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="pickerMap"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeMapModal()">取消</button>
+                <button class="btn-confirm" onclick="confirmMapLocation()">確認位置</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript"
+        src="https://webapi.amap.com/maps?v=1.4.15&key=e1f470c32fc2df3f783099676f76ff49"></script>
     <script>
         // DOM Elements
         const dropZone = document.getElementById('dropZone');
@@ -409,16 +527,21 @@
         const uploadPlaceholder = document.getElementById('uploadPlaceholder');
         const videoPreview = document.getElementById('videoPreview');
         const getLocBtn = document.getElementById('getLocBtn');
+        const openMapBtn = document.getElementById('openMapBtn');
         const locStatus = document.getElementById('locStatus');
         const locCoords = document.getElementById('locCoords');
         const submitBtn = document.getElementById('submitBtn');
         const btnText = document.getElementById('btnText');
         const btnSpinner = document.getElementById('btnSpinner');
         const successOverlay = document.getElementById('successOverlay');
+        const mapModal = document.getElementById('mapModal');
 
         // State
         let videoFile = null;
         let locationData = null;
+        let pickerMap = null;
+        let pickerMarker = null;
+        let pickedLocation = null;
 
         // 1. Video Handlers
         dropZone.addEventListener('click', () => fileInput.click());
@@ -474,12 +597,7 @@
             if (lat && lng) {
                 // Determine if valid numbers
                 if (!isNaN(lat) && !isNaN(lng)) {
-                    locationData = { latitude: parseFloat(lat), longitude: parseFloat(lng) };
-
-                    locStatus.textContent = "已獲取位置 (來自地圖)";
-                    locStatus.style.color = "#10b981";
-                    locCoords.innerText = `${parseFloat(lat).toFixed(6)}, ${parseFloat(lng).toFixed(6)}`;
-
+                    updateMainLocation(lat, lng, "已獲取位置 (來自地圖)");
                     getLocBtn.textContent = "重新獲取";
                 }
             }
@@ -494,20 +612,13 @@
                 return;
             }
 
-            getLocBtn.textContent = "Locating...";
+            getLocBtn.textContent = "定位中...";
             getLocBtn.disabled = true;
 
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    locationData = position.coords;
-                    const lat = position.coords.latitude.toFixed(6);
-                    const lng = position.coords.longitude.toFixed(6);
-
-                    locStatus.textContent = "Position Acquired";
-                    locStatus.style.color = "#10b981";
-                    locCoords.innerText = `${lat}, ${lng}`;
-
-                    getLocBtn.textContent = "Refine";
+                    updateMainLocation(position.coords.latitude, position.coords.longitude, "已獲取位置");
+                    getLocBtn.textContent = "重新獲取";
                     getLocBtn.disabled = false;
                 },
                 (error) => {
@@ -522,6 +633,66 @@
                 }
             );
         });
+
+        // --- Map Modal Logic ---
+
+        openMapBtn.addEventListener('click', () => {
+            mapModal.classList.add('open');
+            if (!pickerMap) {
+                initPickerMap();
+            } else {
+                // Resize map (needed when showing hidden div)
+                setTimeout(() => pickerMap.setFitView(), 200);
+            }
+        });
+
+        function closeMapModal() {
+            mapModal.classList.remove('open');
+        }
+
+        function initPickerMap() {
+            pickerMap = new AMap.Map("pickerMap", {
+                resizeEnable: true,
+                center: [113.541765, 22.186945], // Default Macau
+                zoom: 15,
+                mapStyle: 'amap://styles/darkblue',
+                pitch: 40,
+                viewMode: '3D'
+            });
+
+            pickerMap.on('click', function (e) {
+                pickedLocation = {
+                    lat: e.lnglat.getLat(),
+                    lng: e.lnglat.getLng()
+                };
+
+                if (pickerMarker) {
+                    pickerMarker.setPosition(e.lnglat);
+                } else {
+                    pickerMarker = new AMap.Marker({
+                        position: e.lnglat,
+                        map: pickerMap
+                    });
+                }
+            });
+        }
+
+        function confirmMapLocation() {
+            if (pickedLocation) {
+                updateMainLocation(pickedLocation.lat, pickedLocation.lng, "已獲取位置 (手動選取)");
+                closeMapModal();
+            } else {
+                alert("請在地圖上點擊選擇一個位置");
+            }
+        }
+
+        function updateMainLocation(lat, lng, statusText) {
+            locationData = { latitude: parseFloat(lat), longitude: parseFloat(lng) };
+
+            locStatus.textContent = statusText;
+            locStatus.style.color = "#10b981";
+            locCoords.innerText = `${parseFloat(lat).toFixed(6)}, ${parseFloat(lng).toFixed(6)}`;
+        }
 
         // 3. Submit Handler
         submitBtn.addEventListener('click', () => {
