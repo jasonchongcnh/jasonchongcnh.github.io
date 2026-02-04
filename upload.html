@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Video Upload - 全息地圖</title>
+    <title>上載影片</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -340,12 +340,12 @@
 
     <div class="upload-container">
         <div class="header">
-            <h1 class="title">Upload Video Record</h1>
-            <p class="subtitle">Share your perspective with the Holographic Map</p>
+            <h1 class="title">上載定位影片</h1>
+            <p class="subtitle">分享您的視角</p>
         </div>
 
         <div class="form-group">
-            <label class="label">1. Select Video</label>
+            <label class="label">1. 選擇影片</label>
             <div class="drop-zone" id="dropZone">
                 <input type="file" id="fileInput" accept="video/*">
 
@@ -357,7 +357,7 @@
                         <line x1="12" y1="3" x2="12" y2="15"></line>
                     </svg>
                     <div class="drop-text">
-                        <span>Click to upload</span> or drag and drop
+                        <span>點擊上傳</span> 或拖拽影片到此
                     </div>
                 </div>
 
@@ -366,18 +366,18 @@
         </div>
 
         <div class="form-group">
-            <label class="label">2. Current Location</label>
+            <label class="label">2. 實時定位</label>
             <div class="location-card">
                 <div class="location-details">
-                    <span class="status-text" id="locStatus">Location not captured</span>
+                    <span class="status-text" id="locStatus">未獲取位置</span>
                     <span class="coords" id="locCoords">--.------, --.------</span>
                 </div>
-                <button class="get-loc-btn" id="getLocBtn">Get Location</button>
+                <button class="get-loc-btn" id="getLocBtn">獲取位置</button>
             </div>
         </div>
 
         <button class="submit-btn" id="submitBtn">
-            <span id="btnText">Submit Recording</span>
+            <span id="btnText">提交影片</span>
             <div class="spinner" id="btnSpinner"></div>
         </button>
 
@@ -387,7 +387,7 @@
                 <line x1="19" y1="12" x2="5" y2="12"></line>
                 <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
-            Back to Map
+            返回全息地圖
         </a>
 
         <!-- Success Message -->
@@ -397,8 +397,8 @@
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
             </svg>
-            <div class="success-text">Upload Successful!</div>
-            <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Redirecting in 3 seconds...</p>
+            <div class="success-text">上傳成功！</div>
+            <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">將於 3 秒後跳轉...</p>
         </div>
     </div>
 
@@ -464,6 +464,30 @@
         }
 
         // 2. Location Handlers
+
+        // Check URL parameters for passed location
+        function checkUrlLocation() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const lat = urlParams.get('lat');
+            const lng = urlParams.get('lng');
+
+            if (lat && lng) {
+                // Determine if valid numbers
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    locationData = { latitude: parseFloat(lat), longitude: parseFloat(lng) };
+
+                    locStatus.textContent = "已獲取位置 (來自地圖)";
+                    locStatus.style.color = "#10b981";
+                    locCoords.innerText = `${parseFloat(lat).toFixed(6)}, ${parseFloat(lng).toFixed(6)}`;
+
+                    getLocBtn.textContent = "重新獲取";
+                }
+            }
+        }
+
+        // Run on load
+        checkUrlLocation();
+
         getLocBtn.addEventListener('click', () => {
             if (!navigator.geolocation) {
                 locStatus.textContent = "Geolocation is not supported by your browser";

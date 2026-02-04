@@ -437,7 +437,7 @@
                 正在嘗試獲取您的高精度位置信息...
             </div>
 
-            <a href="upload.html" style="display: block; margin-top: 15px; text-decoration: none;">
+            <a href="upload.html" id="uploadLink" style="display: block; margin-top: 15px; text-decoration: none;">
                 <div
                     style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; text-align: center; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 13px; transition: 0.2s;">
                     + 上載定位視頻
@@ -624,6 +624,12 @@
                 str.push('<span style="color:var(--accent-primary)">accuracy:</span> ' + data.accuracy + 'm');
             }
             document.getElementById('result').innerHTML = str.join('<br>');
+
+            // Update upload link with coordinates
+            var uploadLink = document.getElementById('uploadLink');
+            if (uploadLink && data.position) {
+                uploadLink.href = 'upload.html?lat=' + data.position.lat + '&lng=' + data.position.lng;
+            }
         }
 
         function onLocateError(data) {
