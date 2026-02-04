@@ -11,24 +11,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Palette - Deep Cyber/Space Theme (Consistent with Map.html) */
-            --bg-deep: #020617;
-            --panel-bg: rgba(15, 23, 42, 0.65);
-            --panel-border: rgba(148, 163, 184, 0.15);
-            --panel-highlight: rgba(255, 255, 255, 0.05);
+            /* Palette - Clean Light Theme */
+            --bg-deep: #f8fafc;
+            --panel-bg: rgba(255, 255, 255, 0.95);
+            --panel-border: #cbd5e1;
+            --panel-highlight: #ffffff;
 
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
+            --text-main: #0f172a;
+            --text-muted: #475569;
 
-            --accent-primary: #38bdf8;
-            /* Cyan/Sky */
-            --accent-glow: rgba(56, 189, 248, 0.4);
-            --accent-secondary: #818cf8;
+            --accent-primary: #0ea5e9;
+            /* Sky Blue */
+            --accent-glow: rgba(14, 165, 233, 0.25);
+            --accent-secondary: #6366f1;
             /* Indigo */
 
-            --shadow-lg: 0 20px 40px -8px rgba(0, 0, 0, 0.5);
-            --radius-lg: 20px;
-            --radius-md: 12px;
+            --shadow-lg: 0 20px 40px -8px rgba(100, 116, 139, 0.15);
+            --radius-lg: 24px;
+            --radius-md: 16px;
             --radius-sm: 8px;
 
             --anim-speed: 0.3s;
@@ -50,8 +50,8 @@
             justify-content: center;
             overflow-x: hidden;
             background-image:
-                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.05), transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(129, 140, 248, 0.05), transparent 40%);
+                radial-gradient(circle at 10% 20%, rgba(14, 165, 233, 0.05), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.05), transparent 40%);
         }
 
         /* --- Main Container --- */
@@ -63,9 +63,7 @@
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid var(--panel-border);
-            box-shadow:
-                0 0 0 1px var(--panel-highlight) inset,
-                var(--shadow-lg);
+            box-shadow: var(--shadow-lg);
             border-radius: var(--radius-lg);
             animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
             position: relative;
@@ -89,16 +87,18 @@
         }
 
         .title {
-            font-size: 24px;
-            font-weight: 700;
-            margin: 0 0 8px 0;
-            background: linear-gradient(to right, #fff, #bfdbfe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 32px;
+            /* Larger title */
+            font-weight: 800;
+            margin: 0 0 12px 0;
+            color: var(--text-main);
+            background: none;
+            -webkit-text-fill-color: initial;
         }
 
         .subtitle {
-            font-size: 14px;
+            font-size: 16px;
+            /* Larger subtitle */
             color: var(--text-muted);
         }
 
@@ -109,30 +109,32 @@
 
         .label {
             display: block;
-            font-size: 12px;
+            font-size: 13px;
+            /* Slightly larger label */
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: var(--text-muted);
             margin-bottom: 8px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         /* Video Drop Zone */
         .drop-zone {
             border: 2px dashed var(--panel-border);
             border-radius: var(--radius-md);
-            padding: 32px 16px;
+            padding: 40px 24px;
             text-align: center;
             cursor: pointer;
             transition: var(--anim-speed);
             position: relative;
-            background: rgba(2, 6, 23, 0.2);
+            background: rgba(255, 255, 255, 0.5);
+            /* Light bg */
             overflow: hidden;
         }
 
         .drop-zone:hover {
             border-color: var(--accent-primary);
-            background: rgba(56, 189, 248, 0.05);
+            background: rgba(14, 165, 233, 0.05);
         }
 
         .drop-zone.has-video {
@@ -154,7 +156,8 @@
         }
 
         .drop-text {
-            font-size: 14px;
+            font-size: 15px;
+            /* Larger text */
             color: var(--text-muted);
         }
 
@@ -175,10 +178,11 @@
 
         /* Location Card */
         .location-card {
-            background: rgba(2, 6, 23, 0.4);
+            background: rgba(226, 232, 240, 0.5);
+            /* Light grey bg */
             border: 1px solid var(--panel-border);
             border-radius: var(--radius-md);
-            padding: 16px;
+            padding: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -192,30 +196,33 @@
 
         .coords {
             font-family: monospace;
-            font-size: 14px;
+            font-size: 15px;
             color: var(--accent-primary);
+            font-weight: 600;
         }
 
         .status-text {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-muted);
         }
 
         .get-loc-btn {
-            background: rgba(56, 189, 248, 0.1);
+            background: white;
             color: var(--accent-primary);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            padding: 8px 12px;
+            border: 1px solid var(--panel-border);
+            padding: 10px 16px;
             border-radius: var(--radius-sm);
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--anim-speed);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
         .get-loc-btn:hover {
             background: var(--accent-primary);
-            color: #000;
+            color: white;
+            border-color: var(--accent-primary);
         }
 
         .get-loc-btn:disabled {
@@ -256,14 +263,14 @@
             justify-content: center;
             gap: 6px;
             margin-top: 24px;
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-muted);
             text-decoration: none;
             transition: 0.2s;
         }
 
         .back-link:hover {
-            color: var(--text-main);
+            color: var(--accent-primary);
         }
 
         /* Map Modal */
@@ -309,9 +316,9 @@
         }
 
         .modal-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
             margin: 0;
         }
 
@@ -655,7 +662,7 @@
                 resizeEnable: true,
                 center: [113.541765, 22.186945], // Default Macau
                 zoom: 15,
-                mapStyle: 'amap://styles/darkblue',
+                mapStyle: 'amap://styles/normal',
                 pitch: 40,
                 viewMode: '3D'
             });

@@ -13,25 +13,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Palette - Deep Cyber/Space Theme */
-            --bg-deep: #020617;
-            --panel-bg: rgba(15, 23, 42, 0.65);
-            --panel-border: rgba(148, 163, 184, 0.15);
-            --panel-highlight: rgba(255, 255, 255, 0.05);
+            /* Palette - Clean Light Theme */
+            --bg-deep: #f8fafc;
+            --panel-bg: rgba(255, 255, 255, 0.95);
+            --panel-border: #cbd5e1;
+            --panel-highlight: #ffffff;
 
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
+            --text-main: #0f172a;
+            --text-muted: #475569;
 
-            --accent-primary: #38bdf8;
-            /* Cyan/Sky */
-            --accent-glow: rgba(56, 189, 248, 0.4);
+            --accent-primary: #0ea5e9;
+            /* Sky Blue */
+            --accent-glow: rgba(14, 165, 233, 0.25);
 
-            --accent-secondary: #818cf8;
+            --accent-secondary: #6366f1;
             /* Indigo */
 
-            --shadow-lg: 0 20px 40px -8px rgba(0, 0, 0, 0.5);
-            --radius-lg: 20px;
-            --radius-md: 12px;
+            --shadow-lg: 0 20px 40px -8px rgba(100, 116, 139, 0.15);
+            --radius-lg: 24px;
+            --radius-md: 16px;
 
             --anim-speed: 0.3s;
         }
@@ -53,20 +53,19 @@
             overflow: hidden;
         }
 
-        /* Map Filter for Dark Mode Vibe */
+        /* Map Filter reset for Light Mode */
         #container {
-            filter: saturate(1.2) contrast(1.1) brightness(0.9);
+            filter: none;
             background: var(--bg-deep);
-            /* Fallback */
         }
 
-        /* --- Ambient Overlay --- */
+        /* --- Ambient Overlay (Subtle Warmth) --- */
         .map-overlay {
             position: absolute;
             inset: 0;
             background:
-                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.08), transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(129, 140, 248, 0.08), transparent 40%);
+                radial-gradient(circle at 10% 20%, rgba(14, 165, 233, 0.05), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.05), transparent 40%);
             pointer-events: none;
             z-index: 10;
         }
@@ -76,19 +75,19 @@
             position: absolute;
             top: 24px;
             left: 24px;
-            width: 380px;
+            width: 420px;
+            /* Wider for larger text */
             max-width: calc(100vw - 48px);
-            padding: 24px;
+            padding: 32px;
+            /* More padding */
             border-radius: var(--radius-lg);
 
             background: var(--panel-bg);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
 
             border: 1px solid var(--panel-border);
-            box-shadow:
-                0 0 0 1px var(--panel-highlight) inset,
-                var(--shadow-lg);
+            box-shadow: var(--shadow-lg);
 
             z-index: 100;
             animation: slideInLeft 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
@@ -107,38 +106,39 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .panel-title {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            background: linear-gradient(to right, #fff, #bfdbfe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 28px;
+            /* Larger Title */
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-main);
+            /* Solid dark color */
             margin: 0;
         }
 
         .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            background: rgba(56, 189, 248, 0.1);
-            border: 1px solid rgba(56, 189, 248, 0.2);
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.2);
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 13px;
+            /* Larger badge text */
             font-weight: 600;
             color: var(--accent-primary);
         }
 
         .status-dot {
-            width: 6px;
-            height: 6px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background-color: var(--accent-primary);
-            box-shadow: 0 0 8px var(--accent-primary);
+            box-shadow: 0 0 8px var(--accent-glow);
             animation: pulse 2s infinite;
         }
 
@@ -161,10 +161,11 @@
         }
 
         .panel-subtitle {
-            font-size: 13px;
+            font-size: 15px;
+            /* Larger subtitle */
             color: var(--text-muted);
-            line-height: 1.5;
-            margin: 0 0 20px 0;
+            line-height: 1.6;
+            margin: 0 0 24px 0;
         }
 
         .info-section h4 {
@@ -186,11 +187,13 @@
         }
 
         .location-info {
-            font-size: 13px;
+            font-size: 15px;
+            /* Larger location text */
             line-height: 1.6;
-            color: #cbd5e1;
-            background: rgba(2, 6, 23, 0.3);
-            padding: 12px;
+            color: var(--text-main);
+            background: rgba(226, 232, 240, 0.5);
+            /* Light grey background */
+            padding: 16px;
             border-radius: var(--radius-md);
             border: 1px solid var(--panel-border);
         }
@@ -259,16 +262,18 @@
         }
 
         .custom-info-card {
-            width: 320px;
-            background: #0f172a;
-            /* Solid dark for readability */
+            width: 340px;
+            /* Slightly wider */
+            background: #ffffff;
+            /* White card */
+            /* Solid light for readability */
             border-radius: 16px;
             box-shadow:
                 0 0 0 1px rgba(148, 163, 184, 0.2),
                 0 20px 40px rgba(0, 0, 0, 0.6);
             overflow: hidden;
             position: relative;
-            color: #f1f5f9;
+            color: var(--text-main);
             font-family: inherit;
         }
 
@@ -280,7 +285,7 @@
             transform: translateX(-50%) rotate(45deg);
             width: 16px;
             height: 16px;
-            background: #0f172a;
+            background: #ffffff;
             border-right: 1px solid rgba(148, 163, 184, 0.2);
             border-bottom: 1px solid rgba(148, 163, 184, 0.2);
             z-index: 0;
@@ -296,10 +301,11 @@
         }
 
         .card-title {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 18px;
+            /* Larger card title */
+            font-weight: 700;
             margin: 0;
-            color: #fff;
+            color: var(--text-main);
         }
 
         .card-tag {
@@ -309,8 +315,8 @@
             margin-left: 8px;
             vertical-align: middle;
             background: rgba(148, 163, 184, 0.2);
-            color: #cbd5e1;
-            font-weight: 500;
+            color: var(--text-muted);
+            font-weight: 600;
         }
 
         .close-btn {
@@ -337,9 +343,10 @@
 
         .card-content {
             padding: 16px 20px;
-            font-size: 13px;
+            font-size: 14px;
+            /* Larger body text */
             line-height: 1.6;
-            color: #cbd5e1;
+            color: var(--text-muted);
         }
 
         .card-image {
@@ -467,7 +474,7 @@
             resizeEnable: true,
             center: [113.541765, 22.186945],
             zoom: 16,
-            mapStyle: 'amap://styles/darkblue', // amap://styles/grey is also good for this theme
+            mapStyle: 'amap://styles/normal', // Light/Standard style
             pitch: 50, // Tilt for 3D feel
             viewMode: '3D'
         });
