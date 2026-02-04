@@ -1,0 +1,533 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>Video Upload - 全息地圖</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Palette - Deep Cyber/Space Theme (Consistent with Map.html) */
+            --bg-deep: #020617;
+            --panel-bg: rgba(15, 23, 42, 0.65);
+            --panel-border: rgba(148, 163, 184, 0.15);
+            --panel-highlight: rgba(255, 255, 255, 0.05);
+
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+
+            --accent-primary: #38bdf8;
+            /* Cyan/Sky */
+            --accent-glow: rgba(56, 189, 248, 0.4);
+            --accent-secondary: #818cf8;
+            /* Indigo */
+
+            --shadow-lg: 0 20px 40px -8px rgba(0, 0, 0, 0.5);
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+
+            --anim-speed: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: var(--text-main);
+            background: var(--bg-deep);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.05), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(129, 140, 248, 0.05), transparent 40%);
+        }
+
+        /* --- Main Container --- */
+        .upload-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--panel-border);
+            box-shadow:
+                0 0 0 1px var(--panel-highlight) inset,
+                var(--shadow-lg);
+            border-radius: var(--radius-lg);
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            position: relative;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            background: linear-gradient(to right, #fff, #bfdbfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* --- Form Elements --- */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        /* Video Drop Zone */
+        .drop-zone {
+            border: 2px dashed var(--panel-border);
+            border-radius: var(--radius-md);
+            padding: 32px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--anim-speed);
+            position: relative;
+            background: rgba(2, 6, 23, 0.2);
+            overflow: hidden;
+        }
+
+        .drop-zone:hover {
+            border-color: var(--accent-primary);
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .drop-zone.has-video {
+            padding: 0;
+            border-style: solid;
+        }
+
+        .drop-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+            transition: var(--anim-speed);
+        }
+
+        .drop-zone:hover .drop-icon {
+            color: var(--accent-primary);
+            transform: scale(1.1);
+        }
+
+        .drop-text {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .drop-text span {
+            color: var(--accent-primary);
+            font-weight: 500;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        #videoPreview {
+            width: 100%;
+            display: none;
+            border-radius: var(--radius-md);
+        }
+
+        /* Location Card */
+        .location-card {
+            background: rgba(2, 6, 23, 0.4);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .location-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .coords {
+            font-family: monospace;
+            font-size: 14px;
+            color: var(--accent-primary);
+        }
+
+        .status-text {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .get-loc-btn {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-primary);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--anim-speed);
+        }
+
+        .get-loc-btn:hover {
+            background: var(--accent-primary);
+            color: #000;
+        }
+
+        .get-loc-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(1);
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--anim-speed);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+            margin-top: 16px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.35);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Back Link */
+        .back-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 24px;
+            font-size: 13px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--text-main);
+        }
+
+        /* Success Message Overlay */
+        .success-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+            z-index: 10;
+        }
+
+        .success-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            color: #10b981;
+            margin-bottom: 16px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .success-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="upload-container">
+        <div class="header">
+            <h1 class="title">Upload Video Record</h1>
+            <p class="subtitle">Share your perspective with the Holographic Map</p>
+        </div>
+
+        <div class="form-group">
+            <label class="label">1. Select Video</label>
+            <div class="drop-zone" id="dropZone">
+                <input type="file" id="fileInput" accept="video/*">
+
+                <div id="uploadPlaceholder">
+                    <svg class="drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <div class="drop-text">
+                        <span>Click to upload</span> or drag and drop
+                    </div>
+                </div>
+
+                <video id="videoPreview" controls></video>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">2. Current Location</label>
+            <div class="location-card">
+                <div class="location-details">
+                    <span class="status-text" id="locStatus">Location not captured</span>
+                    <span class="coords" id="locCoords">--.------, --.------</span>
+                </div>
+                <button class="get-loc-btn" id="getLocBtn">Get Location</button>
+            </div>
+        </div>
+
+        <button class="submit-btn" id="submitBtn">
+            <span id="btnText">Submit Recording</span>
+            <div class="spinner" id="btnSpinner"></div>
+        </button>
+
+        <a href="Map.html" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Map
+        </a>
+
+        <!-- Success Message -->
+        <div class="success-overlay" id="successOverlay">
+            <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <div class="success-text">Upload Successful!</div>
+            <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Redirecting in 3 seconds...</p>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+        const videoPreview = document.getElementById('videoPreview');
+        const getLocBtn = document.getElementById('getLocBtn');
+        const locStatus = document.getElementById('locStatus');
+        const locCoords = document.getElementById('locCoords');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const btnSpinner = document.getElementById('btnSpinner');
+        const successOverlay = document.getElementById('successOverlay');
+
+        // State
+        let videoFile = null;
+        let locationData = null;
+
+        // 1. Video Handlers
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', handleFileSelect);
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'var(--accent-primary)';
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'var(--panel-border)';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'var(--panel-border)';
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect();
+            }
+        });
+
+        function handleFileSelect() {
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                if (!file.type.startsWith('video/')) {
+                    alert('Please select a valid video file.');
+                    return;
+                }
+
+                videoFile = file;
+                const url = URL.createObjectURL(file);
+
+                // Show Preview
+                uploadPlaceholder.style.display = 'none';
+                videoPreview.src = url;
+                videoPreview.style.display = 'block';
+                dropZone.classList.add('has-video');
+            }
+        }
+
+        // 2. Location Handlers
+        getLocBtn.addEventListener('click', () => {
+            if (!navigator.geolocation) {
+                locStatus.textContent = "Geolocation is not supported by your browser";
+                return;
+            }
+
+            getLocBtn.textContent = "Locating...";
+            getLocBtn.disabled = true;
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    locationData = position.coords;
+                    const lat = position.coords.latitude.toFixed(6);
+                    const lng = position.coords.longitude.toFixed(6);
+
+                    locStatus.textContent = "Position Acquired";
+                    locStatus.style.color = "#10b981";
+                    locCoords.innerText = `${lat}, ${lng}`;
+
+                    getLocBtn.textContent = "Refine";
+                    getLocBtn.disabled = false;
+                },
+                (error) => {
+                    locStatus.textContent = "Unable to retrieve location";
+                    locStatus.style.color = "#ef4444";
+                    getLocBtn.textContent = "Retry";
+                    getLocBtn.disabled = false;
+                    console.error(error);
+                },
+                {
+                    enableHighAccuracy: true
+                }
+            );
+        });
+
+        // 3. Submit Handler
+        submitBtn.addEventListener('click', () => {
+            // Validation
+            if (!videoFile) {
+                alert('Please select a video file first.');
+                return;
+            }
+            if (!locationData) {
+                const confirmLoc = confirm('Location data is missing. Continue anyway?');
+                if (!confirmLoc) return;
+            }
+
+            // Simulate Upload
+            btnText.style.display = 'none';
+            btnSpinner.style.display = 'block';
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                // Success
+                successOverlay.classList.add('visible');
+
+                setTimeout(() => {
+                    window.location.href = 'Map.html';
+                }, 3000);
+
+            }, 2000);
+        });
+
+    </script>
+</body>
+
+</html>
