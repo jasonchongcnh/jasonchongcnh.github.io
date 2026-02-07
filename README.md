@@ -16,7 +16,7 @@ This website integrates a standard personal blog with an experimental "Holograph
 
 #### 2. Holographic Map Interface 🗺️
 - **Location**: `Map.html`
-- A futuristic map interface built with the **AMap API**.
+- A futuristic map interface built with the **API**.
 - **Concept**: Simulates a "Holographic Map" based on Gaussian Splatting and Beidou Satellite Navigation System integration.
 - **Features**:
     - **Glassmorphism UI**: Floating panels with blur effects for a modern look.
@@ -24,7 +24,7 @@ This website integrates a standard personal blog with an experimental "Holograph
     - **Custom Markers**: Interactive pins for schools and museums with custom SVG icons.
     - **Dark/Light Mode**: Optimized for visual clarity.
 
-#### 3. Video Positioning & Upload 📹
+#### 3. Video Positioning & Upload 📹 (Testing)
 - **Location**: `upload.html`
 - A dedicated interface for uploading video content tagged with geolocation data.
 - **Features**:
