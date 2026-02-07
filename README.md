@@ -36,24 +36,7 @@ This website integrates a standard personal blog with an experimental "Holograph
 
 - **Core**: HTML5, CSS3, JavaScript (ES6+)
 - **Styling**: 
-    - [W3.CSS](https://www.w3schools.com/w3css/) (Blog framework)
     - Custom CSS Variables for themes (Glassmorphism, Gradients)
-    - Font Awesome & Google Fonts (Inter, Raleway)
+    - Google Fonts (Inter)
 - **APIs**:
-    - **AMap Maps JS API** (High-performance mapping)
     - **Geolocation API** (User positioning)
-
-## 🚀 Getting Started
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/jasonchongcnh/jasonchongcnh.github.io.git
-   ```
-2. **Open the project**:
-   - Simply open `index.html` in any modern web browser to view the blog.
-   - Open `Map.html` to explore the map interface.
-   - **Note**: Some geolocation features may require the site to be served over HTTPS or `localhost`.
-
-## 📄 License
-
-This project is open for educational and personal use. Content and design by **Jason Chong**.
