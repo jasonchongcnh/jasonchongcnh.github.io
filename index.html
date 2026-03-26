@@ -1,138 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta name="google-site-verification" content="6YzF_g9FcQmOYlWrw8x5-h3gwOjPbu39wKzL0mLtK-E" /><!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-SPHPD5VE99"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-SPHPD5VE99');
-</script>
-<title>CNH Blog</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-<link rel="stylesheet" href="./css/styles.css">
-<style>
-body,h1,h2,h3,h4,h5 {font-family: "Inter", "Segoe UI", sans-serif}
-</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="./assets/img/Jason Chong_Logo.jpg">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- =====BOX ICONS===== -->
+    <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+
+    <title>Jason Chong</title>
 </head>
-<body class="w3-light-grey">
 
-<!-- w3-content defines a container for fixed size centered content, 
-and is wrapped around the whole page content, except for the footer in this example -->
-<div class="w3-content site-container" style="max-width:1200px">
-<!-- Header -->
-<header class="w3-container w3-center w3-padding-32 site-header"> 
-  <h1><b>CNH Blog</b></h1>
-  <p>Welcome to the website of <span class="site-tag">Jason Chong</span></p>
-</header>
-<!-- Grid -->
-<div class="w3-row">
-<!-- Blog entries -->
-<div class="w3-col l8 s12">
-  <!-- Blog entry -->
-  <div class="w3-card-4 w3-margin w3-white">
-    <img src="./Image/20240113160848.jpg" alt="LRT_Barra_Platform1" style="width:100%">
-    <div class="w3-container">
-    <b><a href="./introduction.html"></b>
-      <h3><b>介紹</b></h3>
-      <h5>Introduction, <span class="w3-opacity">June 10, 2023</span></h5>
-    </div>
-    <div class="w3-container">
-      <p>大家好！歡迎來到我的網站！在這裡，我會分享我的學習內容、筆記和其他網站，涉及到VR，Notion等。 未來，我還會陸續加入其他內容。敬請期待！</p>
-      <div class="w3-row">
-        <div class="w3-col m8 s12">
-          <p><button class="w3-button w3-padding-large w3-white w3-border"><b><a href="./introduction.html">READ MORE »</a></b></button></p>
+<body>
+    <!--===== HEADER =====-->
+    <header class="l-header">
+        <nav class="nav bd-grid">
+            <div>
+                <a href="./index.html" class="nav__logo">Jason Chong</a>
+            </div>
+
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li class="nav__item"><a href="#home" class="nav__link active-link">Home</a></li>
+                    <li class="nav__item"><a href="#about" class="nav__link">About</a></li>
+                    <li class="nav__item"><a href="#skills" class="nav__link">Skills</a></li>
+                    <li class="nav__item"><a href="#work" class="nav__link">Work</a></li>
+                    <li class="nav__item"><a href="#contact" class="nav__link">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="nav__toggle" id="nav-toggle">
+                <i class='bx bx-menu'></i>
+            </div>
+        </nav>
+    </header>
+
+    <main class="l-main">
+        <!--===== HOME =====-->
+        <section class="home bd-grid" id="home">
+            <div class="home__data">
+                <h1 class="home__title">Hi,<br>I'am <span class="home__title-color">Jason</span><br> Programmer</h1>
+
+                <a href="#contact" class="button">Contact</a>
+            </div>
+
+            <div class="home__social">
+                <a href="https://linkedin.com/in/jason-chong-1561bb378" class="home__social-icon"><i
+                        class='bx bxl-linkedin'></i></a>
+                <a href="https://be.net/jason_cnh_1002" class="home__social-icon"><i class='bx bxl-behance'></i></a>
+                <a href="https://github.com/jasonchongcnh" class="home__social-icon"><i class='bx bxl-github'></i></a>
+            </div>
+
+            <div class="home__img">
+                <svg class="home__blob" viewBox="0 0 479 467" xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <mask id="mask0" mask-type="alpha">
+                        <path
+                            d="M9.19024 145.964C34.0253 76.5814 114.865 54.7299 184.111 29.4823C245.804 6.98884 311.86 -14.9503 370.735 14.143C431.207 44.026 467.948 107.508 477.191 174.311C485.897 237.229 454.931 294.377 416.506 344.954C373.74 401.245 326.068 462.801 255.442 466.189C179.416 469.835 111.552 422.137 65.1576 361.805C17.4835 299.81 -17.1617 219.583 9.19024 145.964Z" />
+                    </mask>
+                    <g mask="url(#mask0)">
+                        <path
+                            d="M9.19024 145.964C34.0253 76.5814 114.865 54.7299 184.111 29.4823C245.804 6.98884 311.86 -14.9503 370.735 14.143C431.207 44.026 467.948 107.508 477.191 174.311C485.897 237.229 454.931 294.377 416.506 344.954C373.74 401.245 326.068 462.801 255.442 466.189C179.416 469.835 111.552 422.137 65.1576 361.805C17.4835 299.81 -17.1617 219.583 9.19024 145.964Z" />
+                        <image class="home__blob-img" x="50" y="60" href="assets/img/Jason.png" />
+                    </g>
+                </svg>
+            </div>
+        </section>
+
+        <!--===== ABOUT =====-->
+        <section class="about section " id="about">
+            <h2 class="section-title">About</h2>
+
+            <div class="about__container bd-grid">
+                <div class="about__img">
+                    <img src="assets/img/about.jpeg" alt="">
+                </div>
+
+                <div>
+                    <h2 class="about__subtitle">I'am Jason Chong</h2>
+                    <p class="about__text">Hello everyone! Welcome to my website! Here, I will share my learning
+                        content, notes and other websites related to VR, Notion, etc. In the future, I will continue to
+                        add other content. Stay tuned!</p>
+                </div>
+            </div>
+        </section>
+
+        <!--===== SKILLS =====-->
+        <section class="skills section" id="skills">
+            <h2 class="section-title">Skills</h2>
+
+            <div class="skills__container bd-grid">
+                <div>
+                    <h2 class="skills__subtitle">Professional Skills</h2>
+                    <p class="skills__text">Here is the professional skills that I had learnt during these years.</p>
+                    <div class="skills__data">
+                        <div class="skills__names">
+                            <i class='bx bxl-html5 skills__icon'></i>
+                            <span class="skills__name">HTML5</span>
+                        </div>
+                        <div class="skills__bar skills__html">
+
+                        </div>
+                        <div>
+                            <span class="skills__percentage">95%</span>
+                        </div>
+                    </div>
+                    <div class="skills__data">
+                        <div class="skills__names">
+                            <i class='bx bxl-css3 skills__icon'></i>
+                            <span class="skills__name">VR</span>
+                        </div>
+                        <div class="skills__bar skills__css">
+
+                        </div>
+                        <div>
+                            <span class="skills__percentage">85%</span>
+                        </div>
+                    </div>
+                    <div class="skills__data">
+                        <div class="skills__names">
+                            <i class='bx bxl-javascript skills__icon'></i>
+                            <span class="skills__name">JAVASCRIPT</span>
+                        </div>
+                        <div class="skills__bar skills__js">
+
+                        </div>
+                        <div>
+                            <span class="skills__percentage">65%</span>
+                        </div>
+                    </div>
+                    <div class="skills__data">
+                        <div class="skills__names">
+                            <i class='bx bxs-paint skills__icon'></i>
+                            <span class="skills__name">UX/UI</span>
+                        </div>
+                        <div class="skills__bar skills__ux">
+
+                        </div>
+                        <div>
+                            <span class="skills__percentage">85%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <img src="assets/img/work3.jpg" alt="" class="skills__img">
+                </div>
+            </div>
+        </section>
+
+        <!--===== WORK =====-->
+        <section class="work section" id="work">
+            <h2 class="section-title">Work</h2>
+
+            <div class="work__container bd-grid">
+                <a href="https://jcprogramming1102.github.io/" class="work__img">
+                    <img src="assets/img/work1.jpg" alt="VR">
+					<p>VR</p>
+                </a>
+                <a href="https://jasonchongcnh.notion.site/" class="work__img">
+                    <img src="assets/img/work2.jpg" alt="Notion">
+					<p>Notion</p>
+                </a>
+                <a href="https://jasonchongcnh.notion.site/F3A7_Wire-Loop-Game-7290754910a743c29f6adaeabd581711?pvs=4"
+                    class="work__img">
+                    <img src="assets/img/work3.jpg" alt="Wire Loop Game">
+					<p>Wire Loop Game</p>
+                </a>
+                <a href="https://apexelegance.wixsite.com/team" class="work__img">
+                    <img src="assets/img/work4.jpg" alt="STEM Racing">
+					<p>STEM Racing</p>
+                </a>
+                <a href="./Map.html" class="work__img">
+                    <img src="assets/img/work5.jpg" alt="A novel holo map">
+					<p>A novel holo map</p>
+                </a>
+                <a href="./project.html" class="work__img">
+                    <img src="assets/img/work6.jpg" alt="Macau Map">
+					<p>Macau Map</p>
+                </a>
+            </div>
+        </section>
+
+
+        <!--===== CONTACT =====-->
+        <section class="contact section" id="contact">
+            <h2 class="section-title">Contact</h2>
+            <div class="contact__container bd-grid">
+                <div class="contact__box">
+                    <i class='bx bx-envelope contact__icon'></i>
+                    <h3 class="contact__title">Email</h3>
+                    <a href="mailto:cnhjason@gmail.com" class="button contact__button">Write me</a>
+                </div>
+                <div class="contact__box">
+                    <i class='bx bxl-whatsapp contact__icon'></i>
+                    <h3 class="contact__title">Whatsapp</h3>
+                    <a href="https://wa.me/85365876891" class="button contact__button">Chat me</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!--===== FOOTER =====-->
+    <footer class="footer">
+        <p class="footer__title">Jason Chong</p>
+        <div class="footer__social">
+            <a href="https://facebook.com/jason.cnh.1002" class="footer__icon"><i class='bx bxl-facebook'></i></a>
+            <a href="https://www.instagram.com/jason_cnh_1002" class="footer__icon"><i class='bx bxl-instagram'></i></a>
+            <a href="https://youtube.com/@jasonchongcnh" class="footer__icon"><i class='bx bxl-youtube'></i></a>
+            <a href="#" class="footer__icon"><i class='bx bxl-google'></i></a>
         </div>
-        <div class="w3-col m4 w3-hide-small">
-          <p><span class="w3-padding-large w3-right"><b>Comments  </b> <span class="w3-badge">0</span></span></p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <hr>
-  <!-- Blog entry -->
-  <div class="w3-card-4 w3-margin w3-white">
-  <img src="./Image/20231220080942.jpg" alt="LRT_Barra_Platform2" style="width:100%">
-  
-  
-    <div class="w3-container">
-      <b><a href="./my_other_website.html"></b>
-      <h3><b>我的其他網站</b></h3>
-      <h5>Link, <span class="w3-opacity">November 25, 2023</span></h5>
-    </div>
-    <div class="w3-container">
-      <p>這裡包含我的其他網站，涉及到VR，Notion等。 </p>
-      <div class="w3-row">
-        <div class="w3-col m8 s12">
-          <p><button class="w3-button w3-padding-large w3-white w3-border"><b><a href="./my_other_website.html">READ MORE »</a></b></button></p>
-        </div>
-        <div class="w3-col m4 w3-hide-small">
-          <p><span class="w3-padding-large w3-right"><b>Comments  </b> <span class="w3-badge">0</span></span></p>
-        </div>
-      </div>
-    </div>
-  </div>
-<!-- END BLOG ENTRIES -->
-</div>
-<!-- Introduction menu -->
-<div class="w3-col l4">
-  <!-- About Card -->
-  <div class="w3-card w3-margin w3-margin-top">
-    <div class="w3-container w3-white">
-      <h4><b>Jason Chong</b></h4>
-      <p>這個是我第一個網站，期望更多人能認識它！</p>
-    </div>
-  </div><hr>
-  
-  <!-- Posts -->
-  <div class="w3-card w3-margin">
-    <div class="w3-container w3-padding">
-      <h4>Popular Posts</h4>
-    </div>
-    <ul class="w3-ul w3-hoverable w3-white">
-      <li class="w3-padding-16">
-        <img src="./Image/workshop.jpg" alt="Workshop" class="w3-left w3-margin-right" style="width:50px">
-        <span class="w3-large">Workshop</span><br>
-        <span>STEM</span>
-      </li> 
-    </ul>
-  </div>
-  <hr> 
- 
-  <!-- Labels / tags -->
-  <div class="w3-card w3-margin">
-    <div class="w3-container w3-padding">
-      <h4>Tags</h4>
-    </div>
-    <div class="w3-container w3-white">
-    <p><span class="w3-tag w3-black w3-margin-bottom">STEM</span> 
-      <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">VR</span> 
-      <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Arduino</span>
-      <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Glitch</span> 
-      <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">A-frame</span>
-      <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Notion</span>
-      <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">LRT</span>
-    </p>
-    </div>
-  </div>
-  
-<!-- END Introduction Menu -->
-</div>
-<!-- END GRID -->
-</div><br>
-<!-- END w3-content -->
-</div>
-<!-- Footer -->
-  <footer class="w3-container w3-dark-grey w3-padding-32 w3-margin-top">
-  <button class="w3-button w3-black w3-disabled w3-padding-large w3-margin-bottom">Previous</button>
-  <button class="w3-button w3-black w3-padding-large w3-margin-bottom"><a href="./Page2.html">Next »</a></button>
-  <p>Powered by <a href="https://github.com/jasonchongcnh">Jason Chong</a></p>
-  <button class="w3-button w3-light-grey w3-disabled w3-padding-large w3-margin-bottom"><a href="./index.html">中文</a></button>
-  <button class="w3-button w3-light-grey w3-padding-large w3-margin-bottom"><a href="./en.html">English</a></button>
-  </footer>
+        <p class="footer__copy">&#169; Jason Chong. All rights reserved</p>
+    </footer>
+
+
+    <!--===== SCROLL REVEAL =====-->
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!--===== MAIN JS =====-->
+    <script src="assets/js/main.js"></script>
 </body>
+
 </html>
