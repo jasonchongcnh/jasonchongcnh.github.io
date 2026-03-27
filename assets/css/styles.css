@@ -399,6 +399,8 @@ img {
 }
 
 .work__img {
+  position: relative;
+  display: block;
   box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.3);
   border-radius: 0.5rem;
   overflow: hidden;
@@ -413,10 +415,32 @@ img {
 
 .work__img img {
   transition: 1s;
+  width: 100%;
 }
 
-.work__img img:hover {
+.work__img:hover img {
   transform: scale(1.1);
+}
+
+.work__img p {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem;
+  background: rgba(10, 10, 30, 0.85);
+  backdrop-filter: blur(5px);
+  color: #fff;
+  font-weight: var(--font-semi);
+  text-align: center;
+  transition: 0.3s;
+  margin: 0;
+  border-top: 1px solid var(--first-color);
+}
+
+.work__img:hover p {
+  background: var(--first-color);
+  color: #fff;
 }
 
 /* ===== CONTACT =====*/
