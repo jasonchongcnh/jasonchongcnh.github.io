@@ -50,6 +50,8 @@
       <i class="fa fa-remove"></i>
     </a>
     <h4 class="w3-bar-item"><b>Menu</b></h4>
+    <a class="w3-bar-item w3-hover-black" href="#origami">Origami Simulation</a>
+    <a class="w3-bar-item w3-hover-black" href="#transmission">Transmission Simulation</a>
     <a class="w3-bar-item w3-button w3-hover-black" href="../index.html#work">Back to Home</a>
   </nav>
 
@@ -64,60 +66,66 @@
       <div class="w3-twothird w3-container">
         <h1 class="w3-text-teal">Macau Space Dream Project</h1>
         <h3>Macau Youth Creative Design Competition of Space Experiment</h3>
-        <p>Our project contains two simulator:</p>
-        <h3>Origami Simulation</h3>
-        <p><strong>Adjustable Parameters</strong></p>
-        <ul>
-          <li>S1: Length of the yellow outer surface component.</li>
-          <li>S2: Length of the red inner surface component.</li>
-          <li>r: Effective tube radius and bending separation.</li>
-          <li>L: Virtual-link length. Adjusting it changes S1 and S2 while preserving their difference.</li>
-        </ul>
-        <p><strong>Mathematical Model</strong></p>
-        <p>The simulator calculates four equations:<br>
-          𝐿=𝑆1 + 𝑆2<br>
-          4r𝑡𝑎𝑛(θ/2)=𝑆1−𝑆2<br>
-          𝑥=−𝐿 𝑠𝑖𝑛(θ)<br>
-          𝑦 = 𝐿 + 𝐿𝑐𝑜𝑠(θ)<br>
-          where θ is the bending angle, and (x, y) is the calculated endpoint position.
-        </p>
-        <p><strong>3D Model</strong></p>
-        <ul>
-          <li>The grey structure is a hollow corrugated organ tube.</li>
-          <li>Yellow S1 and red S2 are attached directly to its outer surface.</li>
-          <li>Their paths follow the tube through the bend.</li>
-          <li>Changing any slider rebuilds the tube geometry immediately.</li>
-          <li>Flanges represent the tube’s endpoints.</li>
-          <li>The grid provides spatial scale and orientation.</li>
-        </ul>
-        <img src="../assets/img/organ-simulator.png" alt="Organ Simulator" width="100%">
-        <p><a href="../organ-mathematics-simulator" class="w3-button w3-theme">View Website</a></p>
+        <section class="work section" id="origami">
+          <p>Our project contains two simulation:</p>
+          <h3>Origami Simulation</h3>
+          <p><strong>Adjustable Parameters</strong></p>
+          <ul>
+            <li>S1: Length of the yellow outer surface component.</li>
+            <li>S2: Length of the red inner surface component.</li>
+            <li>r: Effective tube radius and bending separation.</li>
+            <li>L: Virtual-link length. Adjusting it changes S1 and S2 while preserving their difference.</li>
+          </ul>
+          <p><strong>Mathematical Model</strong></p>
+          <p>The simulator calculates four equations:<br>
+            𝐿=𝑆1 + 𝑆2<br>
+            4r𝑡𝑎𝑛(θ/2)=𝑆1−𝑆2<br>
+            𝑥=−𝐿 𝑠𝑖𝑛(θ)<br>
+            𝑦 = 𝐿 + 𝐿𝑐𝑜𝑠(θ)<br>
+            where θ is the bending angle, and (x, y) is the calculated endpoint position.
+          </p>
+          <p><strong>3D Model</strong></p>
+          <ul>
+            <li>The grey structure is a hollow corrugated organ tube.</li>
+            <li>Yellow S1 and red S2 are attached directly to its outer surface.</li>
+            <li>Their paths follow the tube through the bend.</li>
+            <li>Changing any slider rebuilds the tube geometry immediately.</li>
+            <li>Flanges represent the tube’s endpoints.</li>
+            <li>The grid provides spatial scale and orientation.</li>
+          </ul>
+          <img src="../assets/img/organ-simulator.png" alt="Organ Simulator" width="100%">
+          <p><a href="../organ-mathematics-simulator" class="w3-button w3-theme">View Website</a></p>
+        </section>
       </div>
     </div>
 
-    <div class="w3-row w3-padding-64">
-      <div class="w3-twothird w3-container">
-        <h3>Transmission Simulation</h3>
-        <p>We also built another simulator, which demonstrates a motorized tape measure controlling a collapsible organ
-          tube.</p>
-        <ul>
-          <li><strong>Motor ON:</strong> Extends the tape and expands the tube in a straight line.</li>
-          <li><strong>Motor OFF:</strong> Holds the current tube length.</li>
-          <li><strong>Retract:</strong> Reverses the reel and gradually compresses the tube.</li>
-          <li><strong>Transmission ON:</strong> Sends packets through the expanded tube.</li>
-          <li><strong>Packet movement:</strong> Packets reflect between the inner tube walls, representing total
-            internal reflection.</li>
-          <li><strong>Controls:</strong> Extension speed, maximum travel, load, voltage, packet rate, and packet size.
-          </li>
-          <li><strong>Telemetry:</strong> Tube length, expansion, motor power, current, torque, temperature, throughput,
-            latency, reflection count, and delivered packets.</li>
-          <li><strong>Safety behavior:</strong> Motion stops automatically at the fully expanded or collapsed limits.
-            Data transfer is blocked while the tube is fully collapsed.</li>
-        </ul>
-        <img src="../assets/img/transmission-simulator.png" alt="Transmission Simulator" width="100%">
-        <p><a href="../tape-organ-tube-simulator" class="w3-button w3-theme">View Website</a></p>
+    <section class="work section" id="transmission">
+      <div class="w3-row w3-padding-64">
+        <div class="w3-twothird w3-container">
+          <h3>Transmission Simulation</h3>
+          <p>We also built another simulator, which demonstrates a motorized tape measure controlling a collapsible
+            organ
+            tube.</p>
+          <ul>
+            <li><strong>Motor ON:</strong> Extends the tape and expands the tube in a straight line.</li>
+            <li><strong>Motor OFF:</strong> Holds the current tube length.</li>
+            <li><strong>Retract:</strong> Reverses the reel and gradually compresses the tube.</li>
+            <li><strong>Transmission ON:</strong> Sends packets through the expanded tube.</li>
+            <li><strong>Packet movement:</strong> Packets reflect between the inner tube walls, representing total
+              internal reflection.</li>
+            <li><strong>Controls:</strong> Extension speed, maximum travel, load, voltage, packet rate, and packet size.
+            </li>
+            <li><strong>Telemetry:</strong> Tube length, expansion, motor power, current, torque, temperature,
+              throughput,
+              latency, reflection count, and delivered packets.</li>
+            <li><strong>Safety behavior:</strong> Motion stops automatically at the fully expanded or collapsed limits.
+              Data transfer is blocked while the tube is fully collapsed.</li>
+          </ul>
+          <img src="../assets/img/transmission-simulator.png" alt="Transmission Simulator" width="100%">
+          <p><a href="../tape-organ-tube-simulator" class="w3-button w3-theme">View Website</a></p>
+        </div>
       </div>
-    </div>
+    </section>
 
     <footer id="myFooter">
       <div class="w3-container w3-theme-l2 w3-padding-32">
