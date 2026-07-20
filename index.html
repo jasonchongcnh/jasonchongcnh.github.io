@@ -204,15 +204,42 @@
         <section class="contact section" id="contact">
             <h2 class="section-title">Contact</h2>
             <div class="contact__container bd-grid">
-                <div class="contact__box">
-                    <i class='bx bx-envelope contact__icon'></i>
-                    <h3 class="contact__title">Email</h3>
-                    <a href="mailto:cnhjason@gmail.com" class="button contact__button">Write</a>
+                <div class="contact__methods">
+                    <div class="contact__box">
+                        <i class='bx bx-envelope contact__icon'></i>
+                        <h3 class="contact__title">Email</h3>
+                        <a href="mailto:cnhjason@gmail.com" class="button contact__button">Write</a>
+                    </div>
+                    <div class="contact__box">
+                        <i class='bx bxl-whatsapp contact__icon'></i>
+                        <h3 class="contact__title">WhatsApp</h3>
+                        <a href="https://wa.me/85365876891" class="button contact__button">Chat</a>
+                    </div>
                 </div>
-                <div class="contact__box">
-                    <i class='bx bxl-whatsapp contact__icon'></i>
-                    <h3 class="contact__title">WhatsApp</h3>
-                    <a href="https://wa.me/85365876891" class="button contact__button">Chat</a>
+
+                <div class="contact__guestbook">
+                    <h3 class="guestbook__title">Leave a Message</h3>
+                    <form class="guestbook__form" id="guestbook-form">
+                        <div class="guestbook__inputs">
+                            <input type="text" id="guestbook-name" placeholder="Your Name" required class="guestbook__input">
+                            <div class="guestbook__location-badge" id="guestbook-location">
+                                <i class='bx bx-map guestbook__location-icon'></i>
+                                <span id="location-text">Detecting location...</span>
+                            </div>
+                        </div>
+                        <textarea id="guestbook-message" placeholder="Leave a comment (record name, region & message)..." required class="guestbook__input guestbook__textarea"></textarea>
+                        <button type="submit" class="button guestbook__button" id="guestbook-submit">
+                            <span id="submit-text">Post Comment</span>
+                            <div class="guestbook__loader" id="submit-loader"></div>
+                        </button>
+                    </form>
+
+                    <div class="guestbook__feed-container">
+                        <h4 class="feed__title">Recent Comments (<span id="comments-count">0</span>)</h4>
+                        <div class="guestbook__feed" id="comments-feed">
+                            <div class="feed__loading">Loading messages...</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -236,6 +263,9 @@
 
     <!--===== MAIN JS =====-->
     <script src="assets/js/main.js"></script>
+
+    <!--===== GUESTBOOK JS =====-->
+    <script src="assets/js/guestbook.js"></script>
 </body>
 
 </html>
