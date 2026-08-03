@@ -118,6 +118,24 @@
             font-weight: 700;
         }
 
+        .text-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.8);
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text-main);
+            outline: none;
+            transition: var(--anim-speed);
+        }
+
+        .text-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
         /* Video Drop Zone */
         .drop-zone {
             border: 2px dashed var(--panel-border);
@@ -245,6 +263,10 @@
             transition: var(--anim-speed);
             box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
             margin-top: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .submit-btn:hover {
@@ -419,14 +441,13 @@
 
         /* Loading Spinner */
         .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.1);
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-top: 3px solid #fff;
             border-radius: 50%;
             width: 20px;
             height: 20px;
             animation: spin 1s linear infinite;
             display: none;
-            margin: 0 auto;
         }
 
         @keyframes spin {
@@ -446,7 +467,7 @@
     <div class="upload-container">
         <div class="header">
             <h1 class="title">上載定位影片</h1>
-            <p class="subtitle">分享您的視角</p>
+            <p class="subtitle">分享您的視角與全息體驗</p>
         </div>
 
         <div class="form-group">
@@ -471,7 +492,13 @@
         </div>
 
         <div class="form-group">
-            <label class="label">2. 實時定位</label>
+            <label class="label">2. 影片資訊 (選填)</label>
+            <input type="text" id="videoTitle" class="text-input" placeholder="輸入影片標題 (例如：澳門塔景觀)" style="margin-bottom: 10px;">
+            <input type="text" id="videoDesc" class="text-input" placeholder="輸入簡短描述 (例如：景區實時拍攝)">
+        </div>
+
+        <div class="form-group">
+            <label class="label">3. 實時定位</label>
             <div class="location-card">
                 <div class="location-details">
                     <span class="status-text" id="locStatus">未獲取位置</span>
@@ -487,7 +514,7 @@
             <div class="spinner" id="btnSpinner"></div>
         </button>
 
-        <a href="../projects/Holo-Map.html" class="back-link">
+        <a href="Holo-Map.html" class="back-link">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -504,7 +531,7 @@
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
             </svg>
             <div class="success-text">上傳成功！</div>
-            <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">將於 3 秒後跳轉...</p>
+            <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">即將自動返回地圖...</p>
         </div>
     </div>
 
@@ -525,6 +552,9 @@
         </div>
     </div>
 
+    <!-- Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script type="text/javascript"
         src="https://webapi.amap.com/maps?v=1.4.15&key=996c573b1bc00e701430f714a229de65"></script>
     <script>
@@ -578,7 +608,7 @@
             if (fileInput.files && fileInput.files[0]) {
                 const file = fileInput.files[0];
                 if (!file.type.startsWith('video/')) {
-                    alert('Please select a valid video file.');
+                    alert('請選擇有效的影片檔案。');
                     return;
                 }
 
@@ -602,7 +632,6 @@
             const lng = urlParams.get('lng');
 
             if (lat && lng) {
-                // Determine if valid numbers
                 if (!isNaN(lat) && !isNaN(lng)) {
                     updateMainLocation(lat, lng, "已獲取位置 (來自地圖)");
                     getLocBtn.textContent = "重新獲取";
@@ -610,12 +639,11 @@
             }
         }
 
-        // Run on load
         checkUrlLocation();
 
         getLocBtn.addEventListener('click', () => {
             if (!navigator.geolocation) {
-                locStatus.textContent = "Geolocation is not supported by your browser";
+                locStatus.textContent = "您的瀏覽器不支援地理定位";
                 return;
             }
 
@@ -629,9 +657,9 @@
                     getLocBtn.disabled = false;
                 },
                 (error) => {
-                    locStatus.textContent = "Unable to retrieve location";
+                    locStatus.textContent = "無法獲取定位";
                     locStatus.style.color = "#ef4444";
-                    getLocBtn.textContent = "Retry";
+                    getLocBtn.textContent = "重試";
                     getLocBtn.disabled = false;
                     console.error(error);
                 },
@@ -648,7 +676,6 @@
             if (!pickerMap) {
                 initPickerMap();
             } else {
-                // Resize map (needed when showing hidden div)
                 setTimeout(() => pickerMap.setFitView(), 200);
             }
         });
@@ -702,31 +729,48 @@
         }
 
         // 3. Submit Handler
-        submitBtn.addEventListener('click', () => {
-            // Validation
+        submitBtn.addEventListener('click', async () => {
             if (!videoFile) {
-                alert('Please select a video file first.');
+                alert('請先選擇影片檔案！');
                 return;
             }
             if (!locationData) {
-                const confirmLoc = confirm('Location data is missing. Continue anyway?');
+                const confirmLoc = confirm('未獲取位置資訊，是否要以預設位置 (澳門慈幼中學) 繼續提交？');
                 if (!confirmLoc) return;
+                locationData = { latitude: 22.186945, longitude: 113.541765 };
             }
 
-            // Simulate Upload
-            btnText.style.display = 'none';
+            const title = document.getElementById('videoTitle').value.trim() || '全息定位影片';
+            const description = document.getElementById('videoDesc').value.trim();
+
+            btnText.textContent = '上傳中...';
             btnSpinner.style.display = 'block';
             submitBtn.disabled = true;
 
-            setTimeout(() => {
-                // Success
+            try {
+                await window.HoloMapAPI.uploadVideo({
+                    title,
+                    description,
+                    file: videoFile,
+                    lat: locationData.latitude,
+                    lng: locationData.longitude,
+                    onProgress: (percent) => {
+                        btnText.textContent = `上傳中 ${Math.round(percent)}%...`;
+                    }
+                });
+
                 successOverlay.classList.add('visible');
 
                 setTimeout(() => {
                     window.location.href = 'Holo-Map.html';
-                }, 3000);
-
-            }, 2000);
+                }, 2000);
+            } catch (err) {
+                console.error("Upload error:", err);
+                alert('上傳失敗: ' + err.message);
+                btnText.textContent = '提交影片';
+                btnSpinner.style.display = 'none';
+                submitBtn.disabled = false;
+            }
         });
 
     </script>

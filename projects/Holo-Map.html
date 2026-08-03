@@ -236,7 +236,7 @@
         }
 
         .legend-item:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.03);
         }
 
         .legend-dot {
@@ -255,29 +255,29 @@
             box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
         }
 
+        .legend-dot.video {
+            background: #a855f7;
+            box-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+        }
+
         /* --- Custom Info Window (Replaces Default) --- */
         .amap-info-window {
             overflow: visible !important;
-            /* Allow custom styling to pop out */
         }
 
         .custom-info-card {
             width: 340px;
-            /* Slightly wider */
             background: #ffffff;
-            /* White card */
-            /* Solid light for readability */
             border-radius: 16px;
             box-shadow:
                 0 0 0 1px rgba(148, 163, 184, 0.2),
-                0 20px 40px rgba(0, 0, 0, 0.6);
+                0 20px 40px rgba(0, 0, 0, 0.4);
             overflow: hidden;
             position: relative;
             color: var(--text-main);
             font-family: inherit;
         }
 
-        /* Arrow/Tail */
         .custom-info-arrow {
             position: absolute;
             bottom: -8px;
@@ -302,7 +302,6 @@
 
         .card-title {
             font-size: 18px;
-            /* Larger card title */
             font-weight: 700;
             margin: 0;
             color: var(--text-main);
@@ -344,7 +343,6 @@
         .card-content {
             padding: 16px 20px;
             font-size: 14px;
-            /* Larger body text */
             line-height: 1.6;
             color: var(--text-muted);
         }
@@ -463,25 +461,30 @@
             <span class="legend-dot museum"></span>
             <span>博物館地標</span>
         </div>
+        <div class="legend-item">
+            <span class="legend-dot video"></span>
+            <span>用戶上傳影片</span>
+        </div>
     </div>
 
+    <!-- Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script type="text/javascript"
         src="https://webapi.amap.com/maps?v=1.4.15&key=996c573b1bc00e701430f714a229de65"></script>
     <script type="text/javascript">
         // --- 1. Map Initialization ---
-        // Use dark style directly for better performance before tiles load
         var map = new AMap.Map("container", {
             resizeEnable: true,
             center: [113.541765, 22.186945],
             zoom: 16,
-            mapStyle: 'amap://styles/normal', // Light/Standard style
-            pitch: 50, // Tilt for 3D feel
+            mapStyle: 'amap://styles/normal',
+            pitch: 50,
             viewMode: '3D'
         });
 
         // --- 2. Custom Marker Icons (SVG) ---
         function createPin(color) {
-            // Slightly cleaner SVG pin with drop shadow filter built-in
             var svg = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="52" viewBox="0 0 40 52">
             <defs>
                 <filter id="f1" x="-50%" y="-50%" width="200%" height="200%">
@@ -502,32 +505,37 @@
 
         var schoolIcon = createPin('#60a5fa');
         var museumIcon = createPin('#fbbf24');
-
+        var videoIcon = createPin('#a855f7');
 
         // --- 3. Custom InfoWindow Logic ---
-        // Function to generate the HTML content for InfoWindow
-        function createInfoWindowContent(title, tag, image, address, phone, link) {
+        function createInfoWindowContent(title, tag, image, address, phone, link, videoUrl, description) {
             var content = document.createElement("div");
             content.className = "custom-info-card";
 
-            // Content HTML
+            var tagColor = tag === '學校' ? '#60a5fa' : (tag === '博物館' ? '#fbbf24' : '#a855f7');
+
             var html = `
             <div class="card-header">
                 <div>
                     <span class="card-title">${title}</span>
-                    <span class="card-tag" style="border-color:${tag === '學校' ? '#60a5fa' : '#fbbf24'}; color:${tag === '學校' ? '#93c5fd' : '#fcd34d'}">${tag}</span>
+                    <span class="card-tag" style="border-color:${tagColor}; color:${tagColor}">${tag}</span>
                 </div>
                 <button class="close-btn" onclick="closeInfoWindow()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
             <div class="card-content">
-                ${image ? `<img src="${image}" class="card-image" alt="${title}" onerror="this.style.display='none'">` : ''}
+                ${videoUrl ? `
+                <video controls src="${videoUrl}" class="card-image" style="background:#000; width:100%; border-radius:8px; margin-bottom:12px; max-height:220px;" preload="metadata"></video>
+                ` : (image ? `<img src="${image}" class="card-image" alt="${title}" onerror="this.style.display='none'">` : '')}
+
+                ${description ? `<p style="font-size:13px; color:var(--text-muted); margin:0 0 10px 0;">${description}</p>` : ''}
                 
+                ${address ? `
                 <div class="info-row">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                     <span>${address}</span>
-                </div>
+                </div>` : ''}
                 
                 ${phone ? `
                 <div class="info-row">
@@ -535,7 +543,7 @@
                     <span>${phone}</span>
                 </div>` : ''}
 
-                ${link ? `<a href="${link}" class="action-link">More Info &rarr;</a>` : ''}
+                ${link ? `<a href="${link}" class="action-link" target="_blank">More Info &rarr;</a>` : ''}
             </div>
             <div class="custom-info-arrow"></div>
         `;
@@ -543,12 +551,11 @@
             return content;
         }
 
-        // Helper to close window
         window.closeInfoWindow = function () {
             map.clearInfoWindow();
         };
 
-        // --- 4. Add Markers & Interactions ---
+        // --- 4. Add Base Markers & Interactions ---
 
         // Marker 1: School
         var marker1 = new AMap.Marker({
@@ -600,14 +607,56 @@
             infoWindow2.open(map, marker2.getPosition());
         });
 
+        // --- 5. Load User Uploaded Videos ---
+        async function loadUploadedVideos() {
+            try {
+                const videos = await window.HoloMapAPI.fetchVideos();
+                if (!videos || !videos.length) return;
 
-        // --- 5. Geolocation Logic ---
+                videos.forEach(vid => {
+                    if (!vid.lat || !vid.lng) return;
+
+                    var marker = new AMap.Marker({
+                        map: map,
+                        position: [vid.lng, vid.lat],
+                        icon: videoIcon,
+                        offset: new AMap.Pixel(-20, -46)
+                    });
+
+                    const timeStr = vid.created_at ? new Date(vid.created_at).toLocaleDateString() : '';
+                    const infoWindow = new AMap.InfoWindow({
+                        isCustom: true,
+                        content: createInfoWindowContent(
+                            vid.title || '全息定位影片',
+                            '影音地標',
+                            null,
+                            `經緯度: ${parseFloat(vid.lat).toFixed(4)}, ${parseFloat(vid.lng).toFixed(4)} ${timeStr ? ' (' + timeStr + ')' : ''}`,
+                            null,
+                            null,
+                            vid.video_url,
+                            vid.description || ''
+                        ),
+                        offset: new AMap.Pixel(0, -50)
+                    });
+
+                    marker.on('click', function () {
+                        infoWindow.open(map, marker.getPosition());
+                    });
+                });
+            } catch (err) {
+                console.error("Failed to load uploaded map videos:", err);
+            }
+        }
+
+        loadUploadedVideos();
+
+        // --- 6. Geolocation Logic ---
         AMap.plugin('AMap.Geolocation', function () {
             var geolocation = new AMap.Geolocation({
                 enableHighAccuracy: true,
                 timeout: 10000,
                 buttonPosition: 'RB',
-                buttonOffset: new AMap.Pixel(20, 80), // Moved up slightly to not overlap copyright
+                buttonOffset: new AMap.Pixel(20, 80),
                 zoomToAccuracy: true
             });
             map.addControl(geolocation);
@@ -632,7 +681,6 @@
             }
             document.getElementById('result').innerHTML = str.join('<br>');
 
-            // Update upload link with coordinates
             var uploadLink = document.getElementById('uploadLink');
             if (uploadLink && data.position) {
                 uploadLink.href = 'Map-upload.html?lat=' + data.position.lat + '&lng=' + data.position.lng;
@@ -641,7 +689,7 @@
 
         function onLocateError(data) {
             document.getElementById('status').innerHTML = '定位失敗';
-            document.getElementById('status').style.color = '#ef4444'; // Red
+            document.getElementById('status').style.color = '#ef4444';
             document.getElementById('result').innerHTML = '無法獲取位置信息: ' + (data.message || '未知錯誤');
         }
 
