@@ -4,64 +4,111 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+  <!-- Created manually for Jason Chong Portfolio Website -->
 
+  <!-- Root and Homepage -->
+  <url>
+    <loc>https://jasonchongcnh.github.io/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>1.00</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/index.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
 
-<url>
-  <loc>https://jasonchongcnh.github.io/</loc>
-  <lastmod>2024-03-11T12:28:20+00:00</lastmod>
-  <priority>1.00</priority>
-</url>
-<url>
-  <loc>https://jasonchongcnh.github.io/introduction.html</loc>
-  <lastmod>2024-03-11T12:28:20+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://jasonchongcnh.github.io/my_other_website.html</loc>
-  <lastmod>2024-03-11T12:28:20+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://jasonchongcnh.github.io/LRT.html</loc>
-  <lastmod>2024-03-11T12:28:20+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://jasonchongcnh.github.io/Page2.html</loc>
-  <lastmod>2024-03-11T12:28:20+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://jasonchongcnh.github.io/index.html</loc>
-  <lastmod>2024-03-11T12:28:20+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://jasonchongcnh.github.io/en.html</loc>
-  <lastmod>2024-03-11T12:28:20+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://jasonchongcnh.github.io/introduction_en.html</loc>
-  <lastmod>2024-03-11T12:28:20+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://jasonchongcnh.github.io/my_other_website_en.html</loc>
-  <lastmod>2024-03-11T12:28:20+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://jasonchongcnh.github.io/LRT_en.html</loc>
-  <lastmod>2024-03-11T12:28:20+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://jasonchongcnh.github.io/Page2_en.html</loc>
-  <lastmod>2024-03-11T12:28:20+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
+  <!-- Work Detail Pages (Case Studies) -->
+  <url>
+    <loc>https://jasonchongcnh.github.io/works/drink-map.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/works/holo-map.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/works/lrt.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/works/macau-map.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/works/notion.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/works/sentra.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/works/shm-map.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/works/smart-pot.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/works/solar-system.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/works/space.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/works/stem-racing.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/works/sumo-robot.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/works/vr.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/works/wire-loop-game.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.80</priority>
+  </url>
 
-
+  <!-- Interactive Project Demos -->
+  <url>
+    <loc>https://jasonchongcnh.github.io/projects/Drink-Map.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/projects/Holo-Map.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/projects/Macau-Map.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://jasonchongcnh.github.io/projects/solar-system.html</loc>
+    <lastmod>2026-08-04</lastmod>
+    <priority>0.70</priority>
+  </url>
 </urlset>

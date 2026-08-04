@@ -1,42 +1,71 @@
-# CNH Blog & Holographic Map Experiment
+# Jason Chong's Portfolio & Engineering Sandbox 🚀
 
-Welcome to the personal website and experimental platform of **Jason Chong**. This project serves as both a personal blog for sharing insights on technology and a testbed for advanced mapping concepts.
+Welcome to the personal website and engineering sandbox of **Jason Chong**. This project serves as a showcase of personal software/hardware projects, educational writeups, and active web-based experiments (such as spatial holographic mapping and real-time interactive systems).
+
+---
 
 ## 🌟 Project Overview
 
-This website integrates a standard personal blog with an experimental "Holographic Map" interface. The project explores web technologies, spatial computing concepts, and modern UI design.
+This repository hosts a multi-functional personal portfolio site built using responsive vanilla web technologies. It is divided into three main sections: a modern homepage with a real-time guestbook, a collection of comprehensive project case studies, and live interactive sandbox applications.
 
-### Key Features
+### Key Areas & Features
 
-#### 1. Personal Blog 📝
-- **Location**: `index.html`
-- A responsive blog layout sharing learning notes and projects.
-- **Topics**: STEM, VR (Virtual Reality), Arduino, Web Development, and more.
-- **Design**: Clean, readable typography using Inter and sans-serif fonts, powered by W3.CSS and custom styles.
+#### 1. Portfolio Homepage (`index.html`) 📝
+- **Location**: Root directory
+- **Features**: 
+  - Responsive single-page layout with modern navigation.
+  - Interactive profile banner, about me section, and dynamic skill grids.
+  - Showroom containing details of hardware and software engineering works.
+  - **Dynamic Guestbook Comment System**:
+    - **Global Sync (Supabase Mode)**: Syncs visitors' feedback in real time to a Supabase DB backend using API keys.
+    - **Local Caching (Fallback Mode)**: Safely falls back to HTML5 `LocalStorage` and initializes with pre-seeded mock comments if database connection is offline.
+    - **IP Geolocation Engine**: Queries free geographic IP services (`ipwho.is` and `freeipapi.com`) to resolve the poster's city/country and generates corresponding country-flag emojis automatically.
+    - Built-in loading states, post validation, and sleek glassmorphism inputs.
 
-#### 2. Holographic Map Interface 🗺️
-- **Location**: `Map.html`
-- A futuristic map interface built with the **API**.
-- **Concept**: Simulates a "Holographic Map" based on Gaussian Splatting and Beidou Satellite Navigation System integration.
-- **Features**:
-    - **Glassmorphism UI**: Floating panels with blur effects for a modern look.
-    - **Geolocation**: High-accuracy positioning to locate the user.
-    - **Custom Markers**: Interactive pins for schools and museums with custom SVG icons.
-    - **Dark/Light Mode**: Optimized for visual clarity.
+#### 2. Project Case Studies (`works/`) 📚
+- **Location**: `works/` directory
+- A collection of 14 distinct case studies detailing design decisions, schematics, and implementation methodologies for hardware/software projects:
+  - **vr.html**: Concepts and implementations in Virtual Reality.
+  - **notion.html**: Customized Notion productivity systems and templates.
+  - **wire-loop-game.html**: Physical/electronic wire-loop hardware game.
+  - **stem-racing.html**: STEM educational racing car projects.
+  - **shm-map.html**: Smart Health & Smart City Map planning dashboard.
+  - **smart-pot.html**: IoT-connected smart gardening pot system.
+  - **holo-map.html**: Conceptual writeup and design of the Holographic Map.
+  - **sumo-robot.html**: Hardware sumo fighting robot.
+  - **solar-system.html**: Detailed review of the Solar System model.
+  - **macau-map.html**: Historic map visualization of Macau.
+  - **lrt.html**: Mobile/web concept tracker for the Macao Light Rapid Transit system.
+  - **drink-map.html**: Beverage-spot mapping platform.
+  - **sentra.html**: SENTRA smart environmental sensor tracking system.
+  - **space.html**: Macau Space Dream Project aerospace STEM workspace.
 
-#### 3. Video Positioning & Upload 📹 (Testing)
-- **Location**: `upload.html`
-- A dedicated interface for uploading video content tagged with geolocation data.
-- **Features**:
-    - Drag-and-drop video upload.
-    - Automatic and manual location picking.
-    - Integration with the main map system.
+#### 3. Live Sandbox Experiments (`projects/`) 🗺️
+- **Location**: `projects/` directory
+- High-fidelity, client-side web applications and visualizers:
+  - **Holo-Map.html**: A futuristic map interface featuring glassmorphism floating panels, theme switching, geolocation, custom SVG markers for cultural sites/schools, and Gaussian Splatting concepts.
+  - **Map-upload.html**: A video-upload testing interface that matches video files with user-selected coordinates or physical device GPS positioning.
+  - **Drink-Map.html**: Live map application tracking local food and drink spots.
+  - **Macau-Map.html**: Fully responsive historical map visualizer.
+  - **solar-system.html**: Interactive 3D graphics simulating planets revolving around the Sun.
 
-## 🛠️ Technologies Used
+#### 4. Legacy Archive (`V1/`) 🏛️
+- **Location**: `V1/` directory
+- Contains files and translations representing the original structure of the website (e.g. `V1.html`, `introduction.html`, `Page2.html`, and their English translations) kept for version tracking and history.
 
-- **Core**: HTML5, CSS3, JavaScript (ES6+)
-- **Styling**: 
-    - Custom CSS Variables for themes (Glassmorphism, Gradients)
-    - Google Fonts (Inter)
-- **APIs**:
-    - **Geolocation API** (User positioning)
+---
+
+## 🛠️ Technologies & Libraries Used
+
+- **Core**: HTML5, CSS3, Modern JavaScript (ES6+), XML (Sitemaps)
+- **Design & Layout**:
+  - Vanilla CSS Grid & Flexbox
+  - Custom CSS variables supporting glassmorphic transparency, backdrop filters, and gradients
+  - [Google Fonts](https://fonts.google.com) (Inter typography)
+  - [Boxicons CDN](https://boxicons.com) (Icons)
+- **Animations**:
+  - [ScrollReveal.js](https://scrollrevealjs.org/) (Scroll-triggered animations)
+- **APIs & Backend**:
+  - [Supabase client library](https://supabase.com) (Real-time comments synchronization)
+  - [ipwho.is API](https://ipwho.is/) & [Free IP API](https://freeipapi.com) (Dynamic geolocation identification)
+  - HTML5 Geolocation API (Device positioning)
