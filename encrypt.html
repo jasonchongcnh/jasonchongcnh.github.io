@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="./assets/img/Jason Chong_Logo.jpg">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+  <title>Content Encryption Utility | Jason Chong</title>
+</head>
+
+<body>
+  <!--===== HEADER =====-->
+  <header class="l-header">
+    <nav class="nav bd-grid">
+      <div>
+        <a href="./index.html" class="nav__logo">Jason Chong</a>
+      </div>
+      <div class="nav__menu" id="nav-menu">
+        <ul class="nav__list">
+          <li class="nav__item"><a href="index.html" class="nav__link">Home</a></li>
+          <li class="nav__item"><a href="private.html" class="nav__link">Private Page</a></li>
+        </ul>
+      </div>
+      <div class="nav__toggle" id="nav-toggle">
+        <i class='bx bx-menu'></i>
+      </div>
+    </nav>
+  </header>
+
+  <main class="l-main">
+    <section class="private__section">
+      <div class="private__card" style="max-width: 760px; text-align: left;">
+        <div style="text-align: center;">
+          <div class="private__header-icon">
+            <i class='bx bx-key'></i>
+          </div>
+          <h1 class="private__title">Private Content Encryption Utility</h1>
+          <p class="private__subtitle">
+            Use this tool to encrypt your secret HTML/text content into an AES-256 GCM payload.<br>
+            Copy the generated JSON code into <code>private.html</code> to update your protected page.
+          </p>
+        </div>
+
+        <form id="encryptForm" class="private__form" style="margin-top: 1.5rem;">
+          <div>
+            <label style="display:block; margin-bottom: 0.5rem; font-weight:600; color:#fff;">Secret HTML Content:</label>
+            <textarea id="secretContent" class="encrypt__textarea" placeholder="<h1>My Private Notes</h1>&#10;<p>This content is completely hidden from GitHub users...</p>" required></textarea>
+          </div>
+
+          <div>
+            <label style="display:block; margin-bottom: 0.5rem; font-weight:600; color:#fff;">Set Password:</label>
+            <div class="private__input-wrapper">
+              <i class='bx bx-lock-alt private__input-icon'></i>
+              <input type="password" id="encryptPassword" class="private__input" placeholder="Enter encryption password..." required>
+              <button type="button" class="private__toggle-btn" id="togglePasswordBtn">
+                <i class='bx bx-show'></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="private__btn">
+            <i class='bx bx-shield-quarter'></i> Encrypt & Generate Payload
+          </button>
+        </form>
+
+        <div id="resultContainer" style="display:none; margin-top: 2rem;">
+          <label style="display:block; margin-bottom: 0.5rem; font-weight:600; color:#10b981;">
+            <i class='bx bx-check-circle'></i> Encrypted Payload Generated (Copy & paste into <code>private.html</code>):
+          </label>
+          <textarea id="payloadOutput" class="encrypt__textarea" readonly style="min-height: 140px; color: #a7f3d0; border-color: rgba(16, 185, 129, 0.4);"></textarea>
+          <button type="button" id="copyBtn" class="private__btn" style="margin-top: 0.75rem; background: linear-gradient(135deg, #059669, #10b981);">
+            <i class='bx bx-copy'></i> Copy Payload JSON
+          </button>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+          <a href="private.html" class="nav__link" style="color: var(--first-color);">
+            <i class='bx bx-arrow-back'></i> Go to Private Page
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Navigation toggle
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('show');
+      });
+    }
+
+    // Toggle password visibility
+    const passwordInput = document.getElementById('encryptPassword');
+    const toggleBtn = document.getElementById('togglePasswordBtn');
+    toggleBtn.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      toggleBtn.querySelector('i').className = type === 'password' ? 'bx bx-show' : 'bx bx-hide';
+    });
+
+    // Helper functions for Web Crypto AES-256-GCM + PBKDF2
+    function bufferToHex(buffer) {
+      return Array.from(new Uint8Array(buffer))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+    }
+
+    async function deriveKey(password, saltBuffer) {
+      const enc = new TextEncoder();
+      const passwordKey = await crypto.subtle.importKey(
+        'raw',
+        enc.encode(password),
+        'PBKDF2',
+        false,
+        ['deriveKey']
+      );
+
+      return crypto.subtle.deriveKey(
+        {
+          name: 'PBKDF2',
+          salt: saltBuffer,
+          iterations: 100000,
+          hash: 'SHA-256'
+        },
+        passwordKey,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt']
+      );
+    }
+
+    async function encryptData(plaintext, password) {
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const key = await deriveKey(password, salt);
+
+      const enc = new TextEncoder();
+      const ciphertextBuffer = await crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv: iv },
+        key,
+        enc.encode(plaintext)
+      );
+
+      return JSON.stringify({
+        v: 1,
+        salt: bufferToHex(salt.buffer),
+        iv: bufferToHex(iv.buffer),
+        ciphertext: bufferToHex(ciphertextBuffer)
+      }, null, 2);
+    }
+
+    // Handle Form Submit
+    const encryptForm = document.getElementById('encryptForm');
+    const secretContent = document.getElementById('secretContent');
+    const resultContainer = document.getElementById('resultContainer');
+    const payloadOutput = document.getElementById('payloadOutput');
+    const copyBtn = document.getElementById('copyBtn');
+
+    encryptForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        const payload = await encryptData(secretContent.value, passwordInput.value);
+        payloadOutput.value = payload;
+        resultContainer.style.display = 'block';
+        resultContainer.scrollIntoView({ behavior: 'smooth' });
+      } catch (err) {
+        alert('Encryption error: ' + err.message);
+      }
+    });
+
+    copyBtn.addEventListener('click', () => {
+      payloadOutput.select();
+      document.execCommand('copy');
+      const originalText = copyBtn.innerHTML;
+      copyBtn.innerHTML = "<i class='bx bx-check'></i> Copied!";
+      setTimeout(() => {
+        copyBtn.innerHTML = originalText;
+      }, 2000);
+    });
+  </script>
+</body>
+
+</html>

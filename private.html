@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="./assets/img/Jason Chong_Logo.jpg">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <!-- =====BOX ICONS===== -->
+  <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+  <title>Private Space | Jason Chong</title>
+</head>
+
+<body>
+  <!--===== HEADER =====-->
+  <header class="l-header">
+    <nav class="nav bd-grid">
+      <div>
+        <a href="./index.html" class="nav__logo">Jason Chong</a>
+      </div>
+
+      <div class="nav__menu" id="nav-menu">
+        <ul class="nav__list">
+          <li class="nav__item"><a href="index.html#home" class="nav__link">Home</a></li>
+          <li class="nav__item"><a href="index.html#about" class="nav__link">About</a></li>
+          <li class="nav__item"><a href="index.html#skills" class="nav__link">Skills</a></li>
+          <li class="nav__item"><a href="index.html#work" class="nav__link">Work</a></li>
+          <li class="nav__item"><a href="index.html#contact" class="nav__link">Contact</a></li>
+          <li class="nav__item"><a href="private.html" class="nav__link active-link"><i class='bx bx-lock-alt'></i> Private</a></li>
+        </ul>
+      </div>
+
+      <div class="nav__toggle" id="nav-toggle">
+        <i class='bx bx-menu'></i>
+      </div>
+    </nav>
+  </header>
+
+  <main class="l-main">
+    <section class="private__section">
+      <!-- Locked State Card -->
+      <div id="lockedCard" class="private__card">
+        <div class="private__header-icon">
+          <i class='bx bx-lock-alt'></i>
+        </div>
+        <h1 class="private__title">Protected Content</h1>
+        <p class="private__subtitle">
+          This page is client-side encrypted.<br>Enter the password to decrypt and view the private content.
+        </p>
+
+        <form id="loginForm" class="private__form">
+          <div class="private__input-wrapper">
+            <i class='bx bx-key private__input-icon'></i>
+            <input type="password" id="passwordInput" class="private__input" placeholder="Enter password..." required autocomplete="current-password">
+            <button type="button" id="togglePasswordBtn" class="private__toggle-btn" title="Toggle password visibility">
+              <i class='bx bx-show'></i>
+            </button>
+          </div>
+
+          <div id="errorMessage" class="private__error">
+            <i class='bx bx-error-circle'></i> Incorrect password. Please try again.
+          </div>
+
+          <button type="submit" id="unlockBtn" class="private__btn">
+            <i class='bx bx-lock-open-alt'></i> Unlock Content
+          </button>
+        </form>
+
+        <div class="private__badge">
+          <i class='bx bx-shield-check'></i> AES-256-GCM Encrypted (Zero GitHub Source Leak)
+        </div>
+      </div>
+
+      <!-- Unlocked State Container -->
+      <div id="unlockedContainer" class="private__unlocked-container">
+        <div class="private__unlocked-header">
+          <div class="private__unlocked-title">
+            <i class='bx bx-check-shield'></i> Private Space Unlocked
+          </div>
+          <button id="lockBtn" class="private__lock-btn">
+            <i class='bx bx-lock-alt'></i> Lock & Clear Session
+          </button>
+        </div>
+
+        <div id="decryptedBody" class="private__decrypted-body">
+          <!-- Decrypted HTML will be safely injected here -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Encrypted Payload (Generated via encrypt.html) -->
+  <script id="encryptedPayload" type="application/json">
+  {
+    "v": 1,
+    "salt": "4ae2a832e5bb40699137d3ba19a87baf",
+    "iv": "4a2a24f983d4750d704695ea",
+    "ciphertext": "b9be7e4df69862c3fc3f598ceaafd63bcdd6b079c131b67f9cccb798b079d5f35738e4bd5a4a603e9946fc951e45c28311e628008f01108cea031dcd17d2ed3ff2393bc586694f12b7d1e7b4ecfc75314114b9b2f6450b691db9de1bb11e1d93639a9b92b0b97b2967324ec3e2113418a60c603649ae6605fffef099672189f47e72f601f6a4e09054b3d872aa59db68e1ff48ba282dac800ad357671d248a257764f692ec36077c53092d0833ce29a27b903ee7a0745ae76bbbcaab2a1810867eca954a2211c8af71296c025dc09313b9fc07cd3d5d30284fc78f632e955948bb0b833b6c8fdb67853fd360e64cca80bb3ff1bf2d24a98f4ef292b1039e0c636fae90b3d60ba5d91b90157bde20f9631ebe2c98e7c2453de962fb1dae11af696a352aa812ef65296828a1914305988e06d9900095d3532f673cbab18a53130be56e6a5fa11110424f35ec4ab2547e25ee1790072c2e170f179cd5c074e72da6e708253939c168df57eb0e33bd17f74ed45d9e2f92b39082f5903a90d5619c71e495144b741ac8bed840e84eec066d96ecf2e5a38410db25ccc3c3b5176af36e83ff61a343986cd36fb598e4eebce5e4dd11a3e43969606545d0e4f32f9fe73eadd0bb09a59c2960d4f95b7194a2df1d482742fa798ef875883a7fff83176a21fab00b316636b6efc0cf3b2c8e5f5e1c944f0d3c17c7625b3678ae250dd06afb913b0833ccb870c7739390d789d1714c86eaf1bf1e53cc8f5f965e104a4f37b1863b162fc7b644380365bb2d173242e8cca10d7dfc97e427f71c8ef16f72fbc21b940c631ee47980cfea172c2c3d3180ad6bd2574c694192ac5de434412278e46ee6b5db6cbc0bfe3a118a9e42313fc52a27758d802fc3f1b30aea53cc3ef12d4ca1f0adb31798ff160b1a6dc1a69775b74cd01be2f84ef52408107139e67ac244b1f0238e64438d43b76bffddf24f2b15a8f1110d915e709668022e268e78da5d1e011000762332a06faa68fe18cdf05651f9087b5821ce62798e6649ac2c0efecced3fad2817735384b9c10b3c46cc88901895ab1f3a6d506687b6e5ec6e6a6c3c103a92ff96a411bfbc8417757e86352e5cd030036a1497c8c607f29549b410ae0644bfb572186ec37fbdc9e50466c08b39edfa626f0b5c2b0a03a8355923d95366d1f1d442618507cf560322bdf94f8fd7f215153a1617878e335ccee14cf19ae0c9f2aaf44d3d911def55e63185ddda8ee26a3b084b6539a504ed0807f654838c788ae4ad43b9426c183a9e615afc64919fd04f665d45e955b0aa842a88f35dae09341778f0a63820cd56e4864ed1f20a5e2f141c8052dac044632434fb3aeee21ba64c52fa632a5ccdcc5ecfa6de6cc5dbb9baf15aa8993d3b4aa201de95fb253033a66f5770523adf5ac37cc94462093a251fb32eedd4dc0384d8859f6ac96da9f9cce2ca7c88443add5ea99b3f1e871d21c686ff5081128ceeb8ba2f1f6fb7fc06929cb4daaf6fc17fc8033f886024e1c54fd4f4779eb9489585bdbfca9c138d6b39868390576e9c825d123a1dc4b01528b7d2183de537a36eb93fb380f295d5bc768af23f090fc4b8b470b72245833d9aac54b6a90070121e6c08fd0d20f6c196dc3153344e9646f53ce2a4385cd20efc430abc5db89dff3644eb6fadafd50d62e54d95c2a4a317d446d20cac59ab78f82b3b617c4ae63628a35cf570f63e28e99fd4e006d941fb2ac6ff5afdac85de66dac2709c89ffe52bbd030706b670d96d8f30fd5af3b8640e8ce32327fea7a18c2c38f3115518610be73cad1c655a8751a24bc360ce4d1ee138b3b7bb82464b5cd6815a24a591ffe5525a109d74ebe4da0030d4d16d5260827f33f767739c6dcdbc7dab70a949308dc400944a3616bf4d1b369c0915418a1b3052b26cce715f18886dc3cfbef14393b1b777f888eea52a5027492b2be3b2984a21c61086d1941ec313977576d7aaa2780fb36da2090a8682c842bc2b122f49925b10101210c7c7ef5c92200ff7e354441c1067148b8fca4d398b8965d4a8c268683a504f9e14a00e8a1fb0f01468f3f2cc0eb6f537864d581ed23f99f90006fe0cd0e5b8147c7a26f691e4b174e9359ad7863b93ba7cb97ec54f563480308874962c9f3240e0f658cf7d8ba0f97fd0b3f493510f7485126ed854ab0e5c20b45a22f0c3df0c4964b8fd984446073e9e7ac6968bed800fb6cfaea96df71e84793709b580b28472bbc365cf4b7fbb35b9777ff53905e9fca18fda06bf8f00d6714dcd7da4b4ce16104c917180373b938dcb54e7831be3c8f339eb9f42c6903e8274c1da5c213ab301908ee0a840d66165ec37a02958737c5235ce7eb3f43252d8913a330ada92508e44c159cc57d429e592bc24d720f1771545ea4bad13f861d207ad52eab3"
+  }
+  </script>
+
+  <script>
+    // Navigation menu toggle
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('show');
+      });
+    }
+
+    // Toggle password visibility
+    const passwordInput = document.getElementById('passwordInput');
+    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+    togglePasswordBtn.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      togglePasswordBtn.querySelector('i').className = type === 'password' ? 'bx bx-show' : 'bx bx-hide';
+    });
+
+    // Web Crypto Decryption Functions
+    function hexToBuffer(hex) {
+      const bytes = new Uint8Array(hex.length / 2);
+      for (let i = 0; i < bytes.length; i++) {
+        bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+      }
+      return bytes.buffer;
+    }
+
+    async function deriveKey(password, saltBuffer) {
+      const enc = new TextEncoder();
+      const passwordKey = await crypto.subtle.importKey(
+        'raw',
+        enc.encode(password),
+        'PBKDF2',
+        false,
+        ['deriveKey']
+      );
+
+      return crypto.subtle.deriveKey(
+        {
+          name: 'PBKDF2',
+          salt: saltBuffer,
+          iterations: 100000,
+          hash: 'SHA-256'
+        },
+        passwordKey,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['decrypt']
+      );
+    }
+
+    async function decryptData(encryptedPayloadJson, password) {
+      const payload = typeof encryptedPayloadJson === 'string' ? JSON.parse(encryptedPayloadJson) : encryptedPayloadJson;
+      const saltBuffer = hexToBuffer(payload.salt);
+      const ivBuffer = hexToBuffer(payload.iv);
+      const ciphertextBuffer = hexToBuffer(payload.ciphertext);
+
+      const key = await deriveKey(password, saltBuffer);
+
+      const decryptedBuffer = await crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv: new Uint8Array(ivBuffer) },
+        key,
+        ciphertextBuffer
+      );
+
+      const dec = new TextDecoder();
+      return dec.decode(decryptedBuffer);
+    }
+
+    // DOM Elements
+    const loginForm = document.getElementById('loginForm');
+    const errorMessage = document.getElementById('errorMessage');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const lockedCard = document.getElementById('lockedCard');
+    const unlockedContainer = document.getElementById('unlockedContainer');
+    const decryptedBody = document.getElementById('decryptedBody');
+    const lockBtn = document.getElementById('lockBtn');
+    const encryptedPayloadElement = document.getElementById('encryptedPayload');
+
+    // Handle Decryption Attempt
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMessage.style.display = 'none';
+      
+      const originalBtnText = unlockBtn.innerHTML;
+      unlockBtn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Decrypting...";
+      unlockBtn.disabled = true;
+
+      try {
+        const rawPayloadStr = encryptedPayloadElement.textContent.trim();
+        const decryptedHTML = await decryptData(rawPayloadStr, passwordInput.value);
+
+        // Inject decrypted content
+        decryptedBody.innerHTML = decryptedHTML;
+
+        // Switch card visibility
+        lockedCard.style.display = 'none';
+        unlockedContainer.style.display = 'block';
+
+        // Clear password input for security
+        passwordInput.value = '';
+      } catch (err) {
+        errorMessage.style.display = 'block';
+      } finally {
+        unlockBtn.innerHTML = originalBtnText;
+        unlockBtn.disabled = false;
+      }
+    });
+
+    // Handle Relock
+    lockBtn.addEventListener('click', () => {
+      decryptedBody.innerHTML = '';
+      unlockedContainer.style.display = 'none';
+      lockedCard.style.display = 'block';
+      errorMessage.style.display = 'none';
+    });
+  </script>
+</body>
+
+</html>
