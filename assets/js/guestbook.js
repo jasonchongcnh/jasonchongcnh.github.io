@@ -20,31 +20,6 @@ const COMMENTS_TABLE = 'comments';
 let detectedLocation = 'Unknown Region';
 let commentsList = [];
 
-// Pre-seeded mock comments to show region functionality out-of-the-box
-const MOCK_COMMENTS = [
-    {
-        id: 'mock-1',
-        name: 'Sarah Jenkins',
-        ip_region: 'London, GB 🇬🇧',
-        message: 'Awesome portfolio, Jason! Love the VR projects and the Macau LRT concept app. Keep up the great work!',
-        created_at: new Date(Date.now() - 3600000 * 2.5).toISOString() // 2.5 hours ago
-    },
-    {
-        id: 'mock-2',
-        name: 'Kenji Sato',
-        ip_region: 'Tokyo, JP 🇯🇵',
-        message: '非常にかっこいい (Very cool)! The design aesthetics of the site are stunning. Your Arduino work is also inspiring.',
-        created_at: new Date(Date.now() - 3600000 * 24).toISOString() // 1 day ago
-    },
-    {
-        id: 'mock-3',
-        name: 'Alex Rivera',
-        ip_region: 'California, US 🇺🇸',
-        message: 'The wire loop game project is really clever! Let me know if you are open to collaborating on some Python scripts.',
-        created_at: new Date(Date.now() - 3600000 * 48).toISOString() // 2 days ago
-    }
-];
-
 // ==========================================
 // GEOLOCATION ENGINE
 // ==========================================

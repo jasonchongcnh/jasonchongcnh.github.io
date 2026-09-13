@@ -27,7 +27,8 @@
                     <li class="nav__item"><a href="#skills" class="nav__link">Skills</a></li>
                     <li class="nav__item"><a href="#work" class="nav__link">Work</a></li>
                     <li class="nav__item"><a href="#contact" class="nav__link">Contact</a></li>
-                    <li class="nav__item"><a href="private.html" class="nav__link"><i class='bx bx-lock-alt'></i></a></li>
+                    <li class="nav__item"><a href="private.html" class="nav__link"><i class='bx bx-lock-alt'></i></a>
+                    </li>
                 </ul>
             </div>
 
@@ -192,6 +193,10 @@
                     <img src="assets/img/drink-map.png" alt="Drink Map">
                     <p>Drink Map</p>
                 </a>
+                <a href="./works/max-smart-clock.html" class="work__img">
+                    <img src="assets/img/max-smart-clock.png" alt="SENTRA">
+                    <p>Max. Smart Clock</p>
+                </a>
                 <a href="./works/sentra.html" class="work__img">
                     <img src="assets/img/sentra.png" alt="SENTRA">
                     <p>SENTRA</p>
@@ -229,13 +234,16 @@
                     <h3 class="guestbook__title">Leave a Message</h3>
                     <form class="guestbook__form" id="guestbook-form">
                         <div class="guestbook__inputs">
-                            <input type="text" id="guestbook-name" placeholder="Your Name" required class="guestbook__input">
+                            <input type="text" id="guestbook-name" placeholder="Your Name" required
+                                class="guestbook__input">
                             <div class="guestbook__location-badge" id="guestbook-location">
                                 <i class='bx bx-map guestbook__location-icon'></i>
                                 <span id="location-text">Detecting location...</span>
                             </div>
                         </div>
-                        <textarea id="guestbook-message" placeholder="Leave a comment (record name, region & message)..." required class="guestbook__input guestbook__textarea"></textarea>
+                        <textarea id="guestbook-message"
+                            placeholder="Leave a comment (record name, region & message)..." required
+                            class="guestbook__input guestbook__textarea"></textarea>
                         <button type="submit" class="button guestbook__button" id="guestbook-submit">
                             <span id="submit-text">Post Comment</span>
                             <div class="guestbook__loader" id="submit-loader"></div>
